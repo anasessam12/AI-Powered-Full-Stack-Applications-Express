@@ -1,0 +1,1 @@
+Password reset requests require identity verification. Agents should send the reset link only to the verified account email address.

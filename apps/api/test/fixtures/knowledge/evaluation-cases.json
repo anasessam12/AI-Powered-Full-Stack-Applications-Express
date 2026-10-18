@@ -1,0 +1,17 @@
+[
+  {
+    "question": "refund requests thirty days",
+    "expectedSource": "refund-policy.md",
+    "expectsEvidence": true
+  },
+  {
+    "question": "password reset identity verification",
+    "expectedSource": "account-security.txt",
+    "expectsEvidence": true
+  },
+  {
+    "question": "lunar travel vouchers",
+    "expectedSource": null,
+    "expectsEvidence": false
+  }
+]

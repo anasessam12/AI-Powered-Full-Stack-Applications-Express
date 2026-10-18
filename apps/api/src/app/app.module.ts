@@ -5,8 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
 import { UsersModule } from './users/users.module';
 import { DocumentsModule } from './documents/documents.module';
+import { RetrievalModule } from './retrieval/retrieval.module';
+import { LlmModule } from '../llm/llm.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, AuthModule, UsersModule, DocumentsModule, HealthModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, AuthModule, UsersModule, DocumentsModule, RetrievalModule, LlmModule, HealthModule],
 })
 export class AppModule {}

@@ -25,8 +25,8 @@ The API currently supports username/password sessions, Admin user management, an
 - `npm run db:revert`: revert the last migration; use only when its effects are understood.
 - `npm run admin:create`: securely prompt for and create the first Admin once.
 - `npm test`: run all Nx project tests. The script enables Node's VM modules for Jest because the maintained PDF parser uses the ESM PDF.js worker. `npm run test:api` runs the API suite. PostgreSQL integration tests also require `TEST_DATABASE_URL` pointing to a dedicated database ending in `_test`.
-- `npm test`: run Nx project tests.
 - `npm run test:legacy`: run the existing Express reference tests.
+- `docs/product/testing.md`: integration-test setup, deterministic provider tests, and retrieval evaluation conventions.
 - `npm run lint`: run Nx lint targets.
 - `npm run build`: run Nx builds.
 - `docker compose down`: stop local PostgreSQL while retaining its named volume.

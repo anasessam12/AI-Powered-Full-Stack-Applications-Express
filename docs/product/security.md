@@ -25,3 +25,10 @@ The login limiter is in-process in this single-instance release. A multi-instanc
 - The server checks extension, declared MIME type, PDF signature, and strict UTF-8 decoding for text formats. The PDF parser disables JavaScript evaluation; malformed or empty extraction is recorded as failed and not indexed.
 - Stored text is untrusted source material. The API stores chunk/page/section metadata for downstream retrieval, but document text must never be treated as system instructions.
 - Configure `DOCUMENT_STORAGE_ROOT` on a persistent volume and include it in the application's backup/retention plan. Do not expose that directory from the web server.
+
+## Retrieval and model boundary
+
+- Full-text retrieval uses parameterized `websearch_to_tsquery` input. It returns only chunks from `INDEXED`, non-deleted documents and caps results at five.
+- Evidence text is serialized as bounded JSON and explicitly marked untrusted in the system instruction. Retrieved instructions never override policy. If no chunk reaches the configured `RETRIEVAL_MIN_SCORE`, the application abstains without calling the provider.
+- `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` are loaded in the API process only. Provider errors are sanitized, requests time out, caller cancellation propagates, and generation is capped at 1,200 tokens and 40,000 response characters.
+- Tests use `FakeLlmProvider` or mocked fetch responses; tests and builds do not require a live provider key.
