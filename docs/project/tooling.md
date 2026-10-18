@@ -10,7 +10,7 @@ Status: Partial, measured 18 October 2026. Update after choosing the coding agen
 | Baseline commit | `998bc8662613904b3d50dcfacfe636447822291c` | `git rev-parse HEAD` |
 | Project Node requirement | `>=22.13` | `package.json` engines |
 | Host Node/npm | `v24.21.0` / `11.19.0` | terminal `node --version`, `npm --version` |
-| Candidate Angular migration pair | Angular CLI `22.1.8`, Angular `22.1.8` if resolvable, Node `24.21.0` | Use a lockfile and validate before a run; official Angular v22 compatibility includes Node `^24.15.0`; see [versions](https://angular.dev/reference/versions) |
+| Angular migration pair selected from Run 01 | Angular `21.2.25`, CLI/build `21.2.27`, Node `24.21.0` | First run resolved these versions; keep the same lockfile-resolved pair in Runs 02–04 for comparability. The earlier Angular 22.1.8 candidate was not used. |
 | Project dependencies | Express 5, dotenv, multer, pdf-parse | package manifest; lockfile present |
 | Baseline tests | Node built-in test runner; 4/4 pass | local loopback test required approved unsandboxed execution |
 | Angular workspace / project dependencies | Not present in this checkout | no `angular.json` or local Angular framework package |
