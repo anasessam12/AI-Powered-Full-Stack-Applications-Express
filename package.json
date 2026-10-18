@@ -1,21 +1,84 @@
 {
-  "name": "ai-customer-support-assistant-express",
+  "name": "ai-customer-support-assistant",
   "version": "1.0.0",
   "private": true,
-  "description": "Document-grounded customer support assistant using Express, SQLite, and OpenRouter.",
+  "description": "Internal knowledge-grounded customer support assistant",
   "engines": {
-    "node": ">=22.13"
+    "node": ">=24.15.0 <25"
   },
   "scripts": {
-    "setup": "node scripts/setup.js",
-    "start": "node src/index.js",
-    "dev": "node --watch src/index.js",
-    "test": "node --test"
+    "start": "nx serve web",
+    "dev": "nx serve web",
+    "build": "nx run-many -t build",
+    "lint": "nx run-many -t lint",
+    "test": "nx run-many -t test",
+    "test:legacy": "node --test",
+    "legacy:setup": "node scripts/setup.js",
+    "legacy:start": "node src/index.js",
+    "legacy:dev": "node --watch src/index.js"
   },
   "dependencies": {
+    "@angular/common": "22.2.3",
+    "@angular/compiler": "22.2.3",
+    "@angular/core": "22.2.3",
+    "@angular/forms": "22.2.3",
+    "@angular/platform-browser": "22.2.3",
+    "@angular/router": "22.2.3",
+    "@nestjs/common": "11.2.7",
+    "@nestjs/core": "11.2.7",
+    "@nestjs/platform-express": "11.2.7",
     "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "multer": "^2.0.2",
-    "pdf-parse": "1.1.1"
-  }
+    "pdf-parse": "1.1.1",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1"
+  },
+  "devDependencies": {
+    "@angular-devkit/core": "22.2.3",
+    "@angular-devkit/schematics": "22.2.3",
+    "@angular/build": "22.2.3",
+    "@angular/cli": "22.2.3",
+    "@angular/compiler-cli": "22.2.3",
+    "@angular/language-service": "22.2.3",
+    "@eslint/js": "^9.8.0",
+    "@nestjs/schematics": "11.1.0",
+    "@nestjs/testing": "11.2.7",
+    "@nx/angular": "23.3.0",
+    "@nx/eslint": "23.3.0",
+    "@nx/eslint-plugin": "23.3.0",
+    "@nx/jest": "23.3.0",
+    "@nx/js": "23.3.0",
+    "@nx/nest": "23.3.0",
+    "@nx/node": "23.3.0",
+    "@nx/web": "23.3.0",
+    "@nx/webpack": "23.3.0",
+    "@schematics/angular": "22.2.3",
+    "@swc/helpers": "~0.5.18",
+    "@types/jest": "~30.0.0",
+    "@types/node": "24.19.2",
+    "@typescript-eslint/utils": "^8.58.0",
+    "angular-eslint": "^22.1.0",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.0.0",
+    "jest": "~30.3.0",
+    "jest-environment-node": "~30.3.0",
+    "jest-util": "~30.3.0",
+    "jsdom": "^27.1.0",
+    "nx": "23.3.0",
+    "ts-jest": "^29.4.7",
+    "ts-node": "10.9.1",
+    "tslib": "^2.3.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.58.0",
+    "vitest": "^4.0.8",
+    "webpack": "~5.110.0",
+    "webpack-cli": "^7.0.0",
+    "webpack-dev-server": "^5.2.1"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "packageManager": "npm@11.19.0"
 }

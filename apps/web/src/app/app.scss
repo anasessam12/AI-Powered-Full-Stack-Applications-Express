@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.workspace-shell {
+  width: min(100% - 2rem, 72rem);
+  margin: 0 auto;
+  padding: clamp(3rem, 9vw, 7rem) 0;
+}
+
+.workspace-intro {
+  max-width: 48rem;
+}
+
+.workspace-eyebrow {
+  margin: 0 0 1rem;
+  color: #52625d;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: #17221f;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+}
+
+.workspace-intro > p:last-child {
+  max-width: 36rem;
+  margin: 1.25rem 0 0;
+  color: #52625d;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
