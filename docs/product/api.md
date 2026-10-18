@@ -64,3 +64,11 @@ The session cookie is named `support_session` by default, scoped to `/api/v1`, `
 The browser restores in-memory auth state from `GET /auth/session`; the session cookie remains unavailable to JavaScript. Every authenticated state-changing request must send the session's `csrfToken` in `X-CSRF-Token`. CSRF tokens are derived from the random session secret and have only their hash stored in PostgreSQL. The API checks the session and role from PostgreSQL on each protected request.
 
 Login is limited to five failed attempts per normalized username and client IP per minute. This release uses a bounded in-process limiter suitable for the single-instance local setup; deployments with multiple API instances should use a shared rate-limit store.
+
+## Angular browser behavior
+
+The browser client starts at `/login`. It restores sign-in state from `GET /auth/session`; the HTTP-only cookie is the only persisted session credential. The API's CSRF token remains in the in-memory session signal. Login failures intentionally use one generic credential message. Angular route guards redirect by role for navigation convenience; every protected operation is still authorized by the API.
+
+Admins use `/admin/users` to create named accounts (minimum 12-character password in this UI), change roles, and deactivate/reactivate accounts. The signed-in Admin's own role and activation controls are disabled; the API remains responsible for the last-active-Admin invariant. `/admin/documents` accepts PDF, TXT, or Markdown up to 20 MiB, displays only API-returned library records and persisted `INDEXED`/`PROCESSING`/`FAILED` status, supports retry for failed documents, and confirms removal. Upload progress is shown only for actual browser transfer events; it does not imply indexing progress.
+
+The Agent `/chat` route is session-protected and currently an honest interim workspace screen. Task 8 replaces it with persisted conversations, SSE answers, and citations. The role guard is a user-experience control and must never be used as authorization.

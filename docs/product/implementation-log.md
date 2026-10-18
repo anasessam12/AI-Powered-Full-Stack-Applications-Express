@@ -69,3 +69,15 @@ This log records implementation checkpoints and verification evidence as the pro
 **Verification:** Full Nx tests passed (48 API tests and 1 web test), including owner isolation for read/archive/delete, CSRF enforcement, message/citation persistence and history ordering, exact event order, idempotent replay after later turns, changed-content conflict, no-evidence abstention, Arabic evidence flow, provider failure, and client disconnect after a partial delta. Full Nx lint/build passed; legacy Express tests passed 4/4; `npm audit --omit=dev` reported zero vulnerabilities; `git diff --check` was clean. Tests used a temporary UTF-8 PostgreSQL 18 cluster and deterministic fake LLM; no live provider credentials were used.
 
 **Rulings:** Multiple messages created in one PostgreSQL transaction can share `created_at`; history adds a role tie-breaker so the user message appears before its assistant response. Assistant rows keep the originating request id in private provider metadata so replay resolves the matching answer even after later turns. Client-side arbitrary-byte SSE parsing is deferred to Task 8 with the Angular parser.
+
+## Task 7 — Angular authentication and Admin workflows
+
+**Status:** Implemented; verification complete, pending commit.
+
+**Delivered:** In-memory cookie-session client with API restore and CSRF headers; generic username/password login; role-guarded Admin navigation; Admin user provisioning, role and activation changes; document upload, status, retry, and removal flows; mobile-aware split-flap visual direction and component-review approval. Agent navigation does not expose Admin screens. The `/chat` Agent route is explicitly interim and is replaced in Task 8.
+
+**Verification:** Angular unit tests pass 20/20 across 7 files; production web build succeeds (371.13 kB initial raw, 94.75 kB estimated transfer); `npx nx run web:lint --skip-nx-cache` succeeds with no warnings. API-backed screens use typed contracts; loading, empty, failed, indexed, processing, retry, and validation states are represented.
+
+**Visual review:** The in-browser component review approved both the masthead and side rail and confirmed all mapped component regions. The chosen approved comp and direction rationale are retained in `docs/product/ui-direction-task7.md`. The CLI launcher was unavailable in this shell, so browser receipt and local sources were used instead of the CLI verify command.
+
+**Limit:** A live database-backed browser sign-in could not be validated as part of this unit/build pass; full-stack and browser acceptance remain in Task 9. Document processing status refreshes on user refresh; no automatic polling is implied.

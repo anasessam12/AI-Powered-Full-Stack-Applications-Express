@@ -1,20 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
-
 describe('App', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [App],
-    }).compileComponents();
-  });
-
-  it('renders the customer support workspace shell', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-
-    expect(compiled.querySelector('main h1')?.textContent?.trim()).toBe(
-      'Customer Support Assistant'
-    );
+  it('renders the route outlet for the authenticated product surfaces', async () => {
+    await TestBed.configureTestingModule({ imports: [App] }).compileComponents();
+    const fixture = TestBed.createComponent(App); fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).querySelector('router-outlet')).not.toBeNull();
   });
 });

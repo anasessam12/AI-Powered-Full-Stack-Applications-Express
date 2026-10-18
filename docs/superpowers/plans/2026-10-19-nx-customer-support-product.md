@@ -131,7 +131,7 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 - [x] **Step 3: Implement conversation service.** Enforce ownership in repository query predicates, persist title/created/updated fields, messages and status, and explicit retention/delete behavior. Never authorize based on frontend role alone.
 - [x] **Step 4: Implement chat orchestration and SSE controller.** Save the user message before retrieval/provider call; stream validated deltas; emit citations from retrieved chunks; transactionally finalize assistant message/citations; mark interrupted or failed output accurately; cancel upstream provider on disconnect; idempotency prevents duplicate user turns.
 - [x] **Step 5: Verify and document.** Run chat/conversation integration tests against PostgreSQL and fake LLM; expected: restart persistence and cross-owner denial pass, failures stay non-completed.
-- [ ] **Step 6: Commit.** `git commit -am "feat: persist conversations and stream grounded chat"` (include new files explicitly).
+- [x] **Step 6: Commit.** `feat: persist conversations and stream grounded chat`.
 
 ## Task 7: Build Angular authentication shell and Admin workflows
 
@@ -139,12 +139,12 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** Angular session service calls auth routes with `withCredentials`; state is in memory and restored from `/auth/session`, never localStorage. Mutating requests include CSRF token. Role-aware routes are for UX only; API remains authoritative. Admin UI provides user create/activate/role management and document upload/status/retry/delete.
 
-- [ ] **Step 1: Write failing Angular tests.** Cover login form validation, generic login failure, session restore, logout, CSRF header, route behavior by role, user management states, upload progress/status/retry, and visible permission/error states.
-- [ ] **Step 2: Run tests and verify failure.** Expected: product login/admin routes and session client are absent.
-- [ ] **Step 3: Implement accessible application shell and auth.** Build responsive navigation, username/password form with keyboard labels, errors, loading, session restore, and logout. Do not store credential or CSRF secret in localStorage.
-- [ ] **Step 4: Implement Admin user/document screens.** Connect API contract, validate upload UX, report processing states and retry/delete results; ensure Agent sees no Admin controls.
-- [ ] **Step 5: Apply Impeccable UX review and verify.** Run Angular tests, lint and production build; check keyboard-only flow, focus management, responsive states and accessible live updates.
-- [ ] **Step 6: Document and commit.** Add UI/session behavior to product docs and commit `feat: add Angular auth and admin workspace`.
+- [x] **Step 1: Write failing Angular tests.** Cover login form validation, generic login failure, session restore, logout, CSRF header, route behavior by role, user management states, upload progress/status/retry, and visible permission/error states.
+- [x] **Step 2: Run tests and verify failure.** Expected: product login/admin routes and session client are absent.
+- [x] **Step 3: Implement accessible application shell and auth.** Build responsive navigation, username/password form with keyboard labels, errors, loading, session restore, and logout. Do not store credential or CSRF secret in localStorage.
+- [x] **Step 4: Implement Admin user/document screens.** Connect API contract, validate upload UX, report processing states and retry/delete results; ensure Agent sees no Admin controls.
+- [x] **Step 5: Apply Impeccable UX review and verify.** Run Angular tests, lint and production build; check keyboard-only flow, focus management, responsive states and accessible live updates.
+- [x] **Step 6: Document and commit.** Add UI/session behavior to product docs and commit `feat: add Angular auth and admin workspace`.
 
 ## Task 8: Build Agent chat, citation and conversation-history experience
 
