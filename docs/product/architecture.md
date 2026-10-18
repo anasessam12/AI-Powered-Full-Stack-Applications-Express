@@ -6,7 +6,7 @@ The product is an Nx integrated monorepo and a single-organization modular monol
 
 - `apps/web`: Angular 22.2.3 customer-support workspace.
 - `apps/api`: NestJS 11.2.7 versioned API; the global prefix is `/api/v1`.
-- PostgreSQL 18.6 is the planned durable store. TypeORM entities and versioned migrations will own schema changes.
+- PostgreSQL 18.6 is the durable store. TypeORM entities and versioned migrations own schema changes; schema synchronization is disabled.
 - `libs/api-contract`: browser-safe API contracts; server persistence entities are not shared with the browser.
 
 The existing Express/SQLite application remains a migration reference while the replacement reaches acceptance. `npm start` and `npm run dev` target the new Angular product. `npm run legacy:start`, `npm run legacy:dev`, and `npm run test:legacy` run the historical implementation and its tests.
@@ -26,3 +26,7 @@ Compatibility was checked against Nx's Angular matrix and Angular's Node/TypeScr
 ## Boundaries
 
 API feature modules own their controllers, DTOs, policy checks, services, and repositories. Auth/session, users, documents, conversations/chat, retrieval, and health remain modules in one Nest process. Provider credentials stay in the API process. Document storage and LLM access are abstracted so local/test adapters do not leak into browser code.
+
+The initial schema creates users, sessions, documents/chunks, conversations/messages, and citations. Username uniqueness is enforced on the normalized value. Session token hashes are unique and indexed by expiry. A composite foreign key binds every message's user to its conversation owner. Conversation deletion cascades to its messages; deleting a document removes its chunks but sets citation document/chunk references to null, preserving the citation's display-source snapshot alongside historical message text. User deletion is restricted while owned data exists. Use migrations for schema changes; never enable TypeORM `synchronize` outside throwaway experiments.
+
+Password credentials use Argon2id. The first Admin is created only by the interactive `npm run admin:create` command, which hides and confirms the password, serializes concurrent bootstrap attempts, and refuses if any Admin already exists. It never seeds a default account.

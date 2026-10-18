@@ -8,13 +8,13 @@ coverage/
 .angular/
 .env
 !.env.example
+var/
 npm-debug.log*
 .DS_Store
 .superpowers/
 .claude/worktrees/
 .claude/settings.local.json
 __screenshots__/
-var/uploads/
 data/*.db
 data/*.db-shm
 data/*.db-wal

@@ -73,12 +73,12 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** Produces `User`, `Session`, `Document`, `DocumentChunk`, `Conversation`, `Message`, and `Citation` entities/repositories with schema and ownership indexes. Bootstrap command accepts username and a hidden password prompt; it creates the first Admin only and refuses to run when an Admin already exists.
 
-- [ ] **Step 1: Write migration contract tests.** Assert empty PostgreSQL migrates to all required tables/constraints, down/up migration behavior is deterministic, username normalization is unique, and foreign-key delete policy matches the spec.
-- [ ] **Step 2: Run the tests and verify failure.** Expected: missing migration/entity/table errors against the test database.
-- [ ] **Step 3: Implement entities and migrations.** Add explicit enums/statuses, foreign keys, timestamps, uniqueness, ownership/order/expiry/status indexes, and document-citation invalidation semantics. Store only a password hash field.
-- [ ] **Step 4: Implement initial Admin bootstrap.** Add an explicit command with interactive hidden password entry and adaptive Argon2id hash; fail safely if run in production without interactive secret input or if initial Admin already exists. Never seed a known password.
-- [ ] **Step 5: Verify schema/bootstrap tests.** Run the migration integration suite against PostgreSQL, including empty DB and duplicate username/second-bootstrap rejection. Expected: all pass and no plaintext password is present in DB.
-- [ ] **Step 6: Document and commit.** Explain migration and bootstrap workflow in development docs; commit `feat: add PostgreSQL schema and admin bootstrap`.
+- [x] **Step 1: Write migration contract tests.** Assert empty PostgreSQL migrates to all required tables/constraints, down/up migration behavior is deterministic, username normalization is unique, and foreign-key delete policy matches the spec.
+- [x] **Step 2: Run the tests and verify failure.** Expected: missing migration/entity/table errors against the test database.
+- [x] **Step 3: Implement entities and migrations.** Add explicit enums/statuses, foreign keys, timestamps, uniqueness, ownership/order/expiry/status indexes, and document-citation invalidation semantics. Store only a password hash field.
+- [x] **Step 4: Implement initial Admin bootstrap.** Add an explicit command with interactive hidden password entry and adaptive Argon2id hash; fail safely if run in production without interactive secret input or if initial Admin already exists. Never seed a known password.
+- [x] **Step 5: Verify schema/bootstrap tests.** Run the migration integration suite against PostgreSQL, including empty DB and duplicate username/second-bootstrap rejection. Expected: all pass and no plaintext password is present in DB.
+- [x] **Step 6: Document and commit.** Explain migration and bootstrap workflow in development docs; commit `feat: add PostgreSQL schema and admin bootstrap`.
 
 ## Task 3: Implement real authentication, sessions, user administration, and authorization
 
