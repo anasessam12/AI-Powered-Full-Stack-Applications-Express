@@ -15,3 +15,7 @@ Report changed files, commands actually run, their results and remaining gaps.
 ```
 
 No follow-ups were sent before first-output scoring. Version pins are shared setup context, not additional feature requirements.
+
+## Design gate and continuation
+
+The first fresh CLI session returned this proposed design and made no file changes: standalone components for login, health, upload, chat, and citations; typed API and SSE services; signal-based session/chat state; Express/API contract unchanged; verification of fragmented streams, failures, roles, keyboard use, and mobile layout. The user had already authorized this exact Run 02 scope by approving execution of the written workshop plan. The implementation continuation was explicitly limited to that proposal and the initial prompt; this additional orchestration message is a recorded follow-up.
