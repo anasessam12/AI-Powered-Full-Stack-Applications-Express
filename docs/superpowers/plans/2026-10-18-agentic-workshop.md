@@ -50,65 +50,10 @@
 
 **Interfaces:** Consumes source commit وHTML/API الحاليين؛ Produces source SHA وHTML hash وinventory وversion manifest تستخدمها كل runs.
 
-- [ ] شغّل `git rev-parse HEAD` و`Get-FileHash frontend/index.html -Algorithm SHA256` من workspace المصدر، وسجّل القيم.
-- [ ] افحص scripts وruntime، ثم شغّل `npm test` للـExpress baseline بعد التأكد من prerequisites. Expected: exit 0 أو failure موثق؛ لا تُصلح الأصل سرًا وتستمر بنفس الهوية.
-- [ ] سجّل agent/model وإعداداته والـskills وhooks وMCP المتاحة فعلًا، وحدود أي تعليمات لا يمكن عزلها عن Basic.
-- [ ] سجّل inventory السلوك مع history stubs والاعتماد على provider؛ اعتمد dataset اصطناعية وfixture strategy للمقارنة.
-- [ ] ثبّت target versions وحد الميزانية/الوقت لكل run في tooling. Gate: لا توجد run تبدأ بلا manifest؛ القرارات التقنية غير المحسومة تظل قرارات قبل التنفيذ.
+- [x] شغّل `git rev-parse HEAD` و`Get-FileHash frontend/index.html -Algorithm SHA256` من workspace المصدر، وسجّل القيم.
+- [x] افحص scripts وruntime، ثم شغّل `npm test` للـExpress baseline بعد التأكد من prerequisites. Expected: exit 0 أو failure موثق؛ لا تُصلح الأصل سرًا وتستمر بنفس الهوية.
+- [x] سجّل agent/model وإعداداته والـskills وhooks وMCP المتاحة فعلًا، وحدود أي تعليمات لا يمكن عزلها عن Basic.
+- [x] سجّل inventory السلوك مع history stubs والاعتماد على provider؛ اعتمد dataset اصطناعية وfixture strategy للمقارنة.
+- [x] ثبّت target versions وحد الميزانية/الوقت لكل run في tooling. Gate: لا توجد run تبدأ بلا manifest؛ القرارات التقنية غير المحسومة تظل قرارات قبل التنفيذ.
 
-### Task 2: تثبيت عقد التقييم وسيناريوهاته
-
-**Files:** Create `docs/workshop/evaluation-checklist.md`; Read `src/index.js`, `frontend/index.html`, protocol.
-
-**Interfaces:** Consumes baseline inventory؛ Produces checklist version ثابتة وfixture definitions: auth success/401، stream success/error/split، upload allowed/denied.
-
-- [ ] انسخ EVAL-01..08 من البروتوكول، وحدد خطوات إعادة الإنتاج وpass/fail لكل منها.
-- [ ] عرّف fixtures بأحداث `token`, `citations`, `done`, `error` حسب payloads الموجودة. Assertions: لا فقد أو تكرار مع split UTF-8/event، ولا إضافة افتراضية لتاريخ محادثات.
-- [ ] عرّف فحص POST/body/Authorization وعدم تسرب provider credential. حدّد error قبل headers وبعدها، وسياسة EOF طبقًا للعقد المعتمد.
-- [ ] سجّل درجات rubric وطريقة قياس effort قبل رؤية أول نتيجة. Gate: مراجع يقدر يعيد نفس التقييم بدون قراءة chat التنفيذ.
-
-### Task 3: تنفيذ التجارب الأربع وتقييم الناتج الأول
-
-**Files:** Create `docs/workshop/runs/01..04/{manifest,prompts,evidence}.md` كأربع مجموعات ملفات فعلية.
-
-**Interfaces:** Consumes baseline/manifest/checklist والـprompts الأربعة؛ Produces first-output snapshot، evidence، scores وconfounders لكل طريقة.
-
-- [ ] أنشئ workspaces معزولة من نفس baseline عبر workflow العزل المعتمد، وsessions مستقلة دون توريث outputs. Verify source SHA وHTML hash متساويان.
-- [ ] شغّل كل طريقة بالـprompt المحدد، ودوّن التفاعلات وكل context إضافي. للـSpec Driven جهّز spec مراجَعة مرتبطة بمعيار التقييم، واحسب وقت إعدادها.
-- [ ] قبل تدخل بشري، احفظ ناتج كل طريقة ونتائج checks. في كل Angular workspace راجع scripts الفعلية، وسجّل أمر install/build/test ومكانه بدل افتراض أن scripts كلها موجودة.
-- [ ] نفّذ checklist بنفس fixtures؛ سجّل pass/fail وexit codes. إذا compilation فشلت سجّل السيناريوهات المعتمدة عليها «تعذر تقييمها» بدل اختراع نتائج.
-- [ ] أثبت سيناريوهات stream fragmentation و401/provider error المذكورة في Task 2، واحسب أثرها في rubric. Gate: لكل score دليل وللناتج الأول snapshot محفوظ.
-
-### Task 4: إصلاح موثق وتحليل وتعلم
-
-**Files:** Modify run evidence؛ Create `docs/workshop/comparison.md`, `docs/workshop/retrospective.md`.
-
-**Interfaces:** Consumes النتائج الخام والـscores؛ Produces مقارنة first-output/after-repair واستنتاجات محدودة بالأدلة.
-
-- [ ] سجل العيوب كموروثة أو regressions أو إضافات خارج النطاق؛ أصلح بعد حفظ التقييم الأول وسجّل الزمن والتدخل.
-- [ ] أعد فقط الفحوص المتأثرة والإلزامية بعد الإصلاح، واحتفظ بالنتائج القديمة منفصلة.
-- [ ] نفذ change challenge موحدة؛ سجّل من فهم وعدّل الكود وكم احتاج وقتًا ومساعدة.
-- [ ] اكتب مقارنة بالمعايير السبعة، و3 ملاحظات وروابط لأمثلة كود وحدود الدراسة. Gate: لا يوجد استنتاج يقول إن prompt أفضل إذا اختلف model/toolchain ولم يُذكر ذلك.
-
-### Task 5: تحضير أفضل نسخة ومسار الـFull Stack
-
-**Files:** Create migration spec وfull-stack spec والعقد وADRs وخطتين مشتقتين كما في file map، ثم run 05 منفصلة إذا نُفّذت.
-
-**Interfaces:** Consumes gaps المثبتة واختيارات المستخدم؛ Produces specs مراجَعة وخطط بملفات/interfaces/tests دقيقة قبل scaffolding.
-
-- [ ] راجع scope: حافظ على Angular/API في migration؛ سجل redesign أو features الجديدة كمتطلبات منفصلة.
-- [ ] استخدم Superpowers وImpeccable والمهارات المتاحة لاستخراج spec وUX وعقد، وأثبت اتصال Angular MCP قبل الادعاء باستخدامه.
-- [ ] للبونص احسم ORM/auth/retrieval/local deployment وحدود cloud data؛ لا تورث قيود FastAPI القديمة تلقائيًا.
-- [ ] اكتب خطتي تنفيذ مستقلتين؛ كل task تربط AC وملفات واختبارات وأوامر فعلية متوافقة مع scaffold المعتمد. راجع specs والخطط قبل كود المنتج.
-- [ ] عند التنفيذ لاحقًا اختبر happy path/failure/permissions/migrations، وسجّل enhanced نتائج منفصلة عن الأربع الأساسية. Gate: demo قابل للإعادة وrunbook، مع فهم المطور لتدفق البيانات وحدود النظام.
-
-## Self-review of this plan
-
-- يغطي التحضير، الأربع طرق، ثبات المصدر/model، المقارنة قبل الإصلاح، التوثيق، والتعلم والبونص.
-- اختيار المستخدم للـstack محفوظ في مرحلة مستقلة؛ لا ننفذ code migration على spec غير موجودة.
-- Review Focus موزّع على مهام لها تحقق محدد، والـstubs والـtooling confounders واضحان.
-- لا توجد results مختلقة أو commands لبناء Angular/Nest غير موجودين. أوامر التنفيذ التفصيلية تُقفل بعد تثبيت workspace وإصداراته.
-
-## Execution handoff
-
-الخطة جاهزة للمراجعة، وكل checkboxes تخص العمل المستقبلي. التوصية: Native في جلسة واحدة، task-by-task، لأنه أوضح للتعلم ولتتبع المقارنة، مع مراجعة منفصلة عند اكتمال النسخة. البديل Subagent-driven مناسب بعد وضوح الحدود والميزانية؛ اختيار التنفيذ ومراجعة الخطة يسبقان كود المنتج.
+### Task 2: تثبيت عقد التقييم وسيناريوهاته`n`n**Files:** Create `docs/workshop/evaluation-checklist.md`; Read `src/index.js`, `frontend/index.html`, protocol.`n`n**Interfaces:** Consumes baseline inventory؛ Produces checklist version ثابتة وfixture definitions: auth success/401، stream success/error/split، upload allowed/denied.`n`n- [ ] انسخ EVAL-01..08 من البروتوكول، وحدد خطوات إعادة الإنتاج وpass/fail لكل منها.`n- [ ] عرّف fixtures بأحداث `token`, `citations`, `done`, `error` حسب payloads الموجودة. Assertions: لا فقد أو تكرار مع split UTF-8/event، ولا إضافة افتراضية لتاريخ محادثات.`n- [ ] عرّف فحص POST/body/Authorization وعدم تسرب provider credential. حدّد error قبل headers وبعدها، وسياسة EOF طبقًا للعقد المعتمد.`n- [ ] سجّل درجات rubric وطريقة قياس effort قبل رؤية أول نتيجة. Gate: مراجع يقدر يعيد نفس التقييم بدون قراءة chat التنفيذ.`n`n### Task 3: تنفيذ التجارب الأربع وتقييم الناتج الأول
