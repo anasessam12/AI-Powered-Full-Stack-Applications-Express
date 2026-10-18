@@ -50,7 +50,7 @@ export class RetrievalService {
          CASE
            WHEN chunk.search_vector @@ search_query.value
              THEN ts_rank_cd(chunk.search_vector, search_query.value)
-           ELSE 0.01
+           ELSE 0.02
          END AS "score"
        FROM search_query
        JOIN document_chunks AS chunk

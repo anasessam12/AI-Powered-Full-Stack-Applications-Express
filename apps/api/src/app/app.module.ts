@@ -7,8 +7,10 @@ import { UsersModule } from './users/users.module';
 import { DocumentsModule } from './documents/documents.module';
 import { RetrievalModule } from './retrieval/retrieval.module';
 import { LlmModule } from '../llm/llm.module';
+import { ConversationsModule } from './conversations/conversations.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, AuthModule, UsersModule, DocumentsModule, RetrievalModule, LlmModule, HealthModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, AuthModule, UsersModule, DocumentsModule, ConversationsModule, RetrievalModule, LlmModule, ChatModule, HealthModule],
 })
 export class AppModule {}

@@ -33,6 +33,30 @@ There is no public registration or user deletion. Account creation returns the n
 
 Accepted content is PDF, UTF-8 TXT, or UTF-8 Markdown. Files default to a 20 MiB limit, configurable with `DOCUMENT_MAX_BYTES` up to a hard 20 MiB ceiling. A SHA-256 uniqueness constraint prevents duplicate content. The API response never returns internal storage keys or filesystem paths. Failed extraction leaves a `FAILED` record with a sanitized error code and retains the original for Admin retry.
 
+## Conversations and grounded chat
+
+| Method | Route | Access | Result |
+| --- | --- | --- | --- |
+| `GET` | `/conversations` | Session | The caller's latest 100 conversations |
+| `POST` | `/conversations` | Session + CSRF | Creates a conversation; optional `{ title }` |
+| `GET` | `/conversations/:id` | Owner session | Safe conversation metadata |
+| `GET` | `/conversations/:id/messages` | Owner session | Ordered user/assistant history with source snapshots |
+| `PATCH` | `/conversations/:id` | Owner session + CSRF | `{ archived: boolean }` |
+| `DELETE` | `/conversations/:id` | Owner session + CSRF | `204`; removes history and citations |
+| `POST` | `/chat` | Session + CSRF | Streams a grounded answer as SSE |
+
+Chat accepts `{ conversationId?, message, requestId }`; `message` is limited to 8,000 characters and `requestId` is a UUID unique per user. Retrieval uses at most the first 500 characters. With no conversation id, the API creates a conversation. Repeating a completed request id replays its persisted answer and citations; reusing the id with changed content returns `409`. The API stores the user message before retrieval/provider work. If retrieval does not meet the evidence threshold, it stores and streams the fixed abstention without calling the model.
+
+SSE event names and JSON bodies are defined by `ChatEventContract` in `libs/api-contract`:
+
+- `message.started`: conversation id, user message id, and assistant message id.
+- `message.delta`: conversation id, assistant message id, and answer text delta.
+- `citations`: source, page/section, chunk/document ids, and rank when evidence supports the answer.
+- `message.completed`: terminal success after the assistant message and citations are persisted.
+- `message.failed`: sanitized failure code; partial output remains `FAILED` or `INTERRUPTED` and no completion event is sent.
+
+Every conversation query is scoped to the authenticated owner; another user's identifiers return `404`. Client disconnects cancel provider work, and partial assistant output is persisted as interrupted.
+
 ## Cookie and CSRF behavior
 
 The session cookie is named `support_session` by default, scoped to `/api/v1`, `HttpOnly`, and `SameSite=Lax`; it is `Secure` when `NODE_ENV=production`. Configure its lifetime with `SESSION_TTL_SECONDS` (60 seconds to 30 days). Configure the only allowed browser origin with `WEB_ORIGIN`.

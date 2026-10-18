@@ -6,6 +6,7 @@ export interface AnswerCitation {
   sourceName: string;
   pageNumber: number | null;
   section: string | null;
+  score: number;
 }
 
 export interface AnswerPreparation {
@@ -77,6 +78,7 @@ export class AnswerPolicy {
         sourceName: this.safeMetadata(chunk.sourceName),
         pageNumber: chunk.pageNumber,
         section: chunk.section ? this.safeMetadata(chunk.section) : null,
+        score: chunk.score,
       }));
     return {
       decision: citations.length ? 'ANSWER' : 'ABSTAIN',

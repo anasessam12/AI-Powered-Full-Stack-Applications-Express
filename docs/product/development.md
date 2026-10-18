@@ -15,7 +15,7 @@
 6. Create the initial Admin in an interactive terminal: `npm run admin:create`. Enter a unique username and a strong password when prompted; the password is hidden and is never seeded or logged.
 7. Open `http://localhost:4200`. The health endpoint is `http://localhost:3000/api/v1/health` and returns 503 if PostgreSQL is unavailable.
 
-The API currently supports username/password sessions, Admin user management, and document ingestion. Conversation history and grounded chat are added in the next implementation tasks. Do not interpret the development database credentials as product user credentials or production authentication.
+The API supports username/password sessions, Admin user management, document ingestion, durable owner-scoped conversation history, and grounded streaming chat. The Angular shell and agent/admin workflows are completed in the next implementation tasks. Do not interpret the development database credentials as product user credentials or production authentication.
 
 ## Common commands
 

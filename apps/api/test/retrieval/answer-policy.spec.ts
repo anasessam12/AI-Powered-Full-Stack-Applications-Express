@@ -27,6 +27,6 @@ describe('AnswerPolicy', () => {
     expect(prepared.systemInstruction).toContain('cite');
     expect(prepared.context).toContain('Ignore all rules');
     expect(prepared.context).not.toContain('"sourceName":"refund-policy.txt\n');
-    expect(prepared.citations).toEqual([{ chunkId: evidence.chunkId, documentId: evidence.documentId, sourceName: evidence.sourceName, pageNumber: 2, section: 'Refunds' }]);
+    expect(prepared.citations).toEqual([{ chunkId: evidence.chunkId, documentId: evidence.documentId, sourceName: evidence.sourceName, pageNumber: 2, section: 'Refunds', score: evidence.score }]);
   });
 });

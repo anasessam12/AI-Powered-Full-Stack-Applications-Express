@@ -65,7 +65,7 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 - [x] **Step 4: Write failing health smoke tests.** Add an API integration test for `GET /api/v1/health` returning readiness status and a web smoke test for the Angular root shell. Run and verify failure because the routes are not implemented.
 - [x] **Step 5: Implement basic health/readiness.** Add public API health/readiness controller that reports database readiness without leaking configuration; ensure Angular shell renders at root. Run focused tests and expect both to pass. (The route currently provides liveness; database-backed readiness is deferred until the database provider lands in Task 2.)
 - [x] **Step 6: Verify workspace baseline.** Run `npm ci`, `npx nx show projects`, `npx nx run-many -t lint test build`, and `docker compose config`; expected: both apps are discovered and all generated targets pass. (Docker CLI is unavailable here; Compose YAML parsing passed, and `docker compose config` remains to verify in a Docker-enabled environment.)
-- [ ] **Step 7: Commit.** `git add package.json package-lock.json nx.json tsconfig.base.json eslint.config.* apps libs docker-compose.yml .env.example .gitignore docs/product/architecture.md docs/product/development.md` then `git commit -m "build: bootstrap Nx Angular and Nest workspace"`.
+- [x] **Step 7: Commit.** `git add package.json package-lock.json nx.json tsconfig.base.json eslint.config.* apps libs docker-compose.yml .env.example .gitignore docs/product/architecture.md docs/product/development.md` then `git commit -m "build: bootstrap Nx Angular and Nest workspace"`.
 
 ## Task 2: Establish PostgreSQL schema, migrations, and safe initial Admin setup
 
@@ -100,12 +100,12 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** Admin-only multipart `POST /api/v1/documents`; authenticated `GET /api/v1/documents`; Admin-only `POST /api/v1/documents/:id/retry` and `DELETE /api/v1/documents/:id`. Storage adapter exposes `put(stream, metadata)`, `open(key)`, and `delete(key)`. Extraction returns page/section-aware text; chunking returns ordinal text and source metadata. Use a configurable 20 MiB limit for v1 and accepted PDF, TXT, Markdown formats.
 
-- [ ] **Step 1: Write failing upload/extraction tests.** Include valid PDF/TXT/Markdown, spoofed MIME/magic, empty/malformed PDF, over-limit file, traversal filename, duplicate checksum behavior, extractor failure/retry, storage failure cleanup, Admin-only denial, and safe deletion invalidating future retrieval citations.
-- [ ] **Step 2: Run the tests and verify failure.** Expected: upload routes and storage adapters are absent.
-- [ ] **Step 3: Implement storage and validation.** Use generated opaque storage keys, canonical configured local root, verify resolved paths stay under root, enforce size/type using bytes and parser validation, never trust original filename as path, and clean up partial writes.
-- [ ] **Step 4: Implement extraction, chunking, and status lifecycle.** Persist `processing`, extract with maintained parsers, create bounded overlapping chunks with page/section metadata, index transactionally, set `indexed` or sanitized `failed` error; retry is idempotent.
-- [ ] **Step 5: Verify document tests and API contract.** Run PostgreSQL integration suite; assert no malformed input wrote outside storage root, status transitions are accurate, and deletion preserves historical message text while removing retrieval eligibility.
-- [ ] **Step 6: Document and commit.** Document formats, 20 MiB cap, storage configuration and retention; commit `feat: add secure document ingestion`.
+- [x] **Step 1: Write failing upload/extraction tests.** Include valid PDF/TXT/Markdown, spoofed MIME/magic, empty/malformed PDF, over-limit file, traversal filename, duplicate checksum behavior, extractor failure/retry, storage failure cleanup, Admin-only denial, and safe deletion invalidating future retrieval citations.
+- [x] **Step 2: Run the tests and verify failure.** Expected: upload routes and storage adapters are absent.
+- [x] **Step 3: Implement storage and validation.** Use generated opaque storage keys, canonical configured local root, verify resolved paths stay under root, enforce size/type using bytes and parser validation, never trust original filename as path, and clean up partial writes.
+- [x] **Step 4: Implement extraction, chunking, and status lifecycle.** Persist `processing`, extract with maintained parsers, create bounded overlapping chunks with page/section metadata, index transactionally, set `indexed` or sanitized `failed` error; retry is idempotent.
+- [x] **Step 5: Verify document tests and API contract.** Run PostgreSQL integration suite; assert no malformed input wrote outside storage root, status transitions are accurate, and deletion preserves historical message text while removing retrieval eligibility.
+- [x] **Step 6: Document and commit.** Document formats, 20 MiB cap, storage configuration and retention; commit `feat: add secure document ingestion`.
 
 ## Task 5: Implement PostgreSQL retrieval and grounded LLM provider boundary
 
@@ -113,12 +113,12 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** `LlmProvider.stream({ system, question, context, signal }): AsyncIterable<ProviderEvent>`; fake provider deterministic in tests. Retrieval accepts query and returns at most 5 ranked chunks with source/page metadata. Answer policy returns evidence-required instructions and an insufficient-evidence result when no chunk clears the configured threshold. Provider config is server-only.
 
-- [ ] **Step 1: Write failing retrieval/provider tests.** Test deterministic rank/tie-break, no deleted/failed document chunks, bounded context, no-results threshold, injection text treated as untrusted source data, provider timeout/error/cancel, fake provider stream, and absence of provider credential from browser bundle/log payload.
-- [ ] **Step 2: Run the tests and verify failure.** Expected: retrieval/provider interfaces are missing.
-- [ ] **Step 3: Implement PostgreSQL full-text retrieval.** Use a migration-defined language-aware `tsvector` or generated search column, parameterized `websearch_to_tsquery`, stable rank plus id tie-break, top 5, and bounded context assembly. Keep retrieval behind repository/service APIs.
-- [ ] **Step 4: Implement LLM boundary and answer policy.** Add provider interface/configuration and deterministic fake. Mark retrieved text as untrusted data in model instructions; require citations for factual claims; return no-evidence response without calling provider when retrieval is empty/under threshold; honor cancellation and timeout.
-- [ ] **Step 5: Verify and document.** Run retrieval tests and versioned evaluation corpus assertions for relevant chunk, source and page citation; expected: known questions retrieve expected sources and empty corpus gives abstention.
-- [ ] **Step 6: Commit.** `git commit -am "feat: add grounded PostgreSQL retrieval"` (include new files explicitly).
+- [x] **Step 1: Write failing retrieval/provider tests.** Test deterministic rank/tie-break, no deleted/failed document chunks, bounded context, no-results threshold, injection text treated as untrusted source data, provider timeout/error/cancel, fake provider stream, and absence of provider credential from browser bundle/log payload.
+- [x] **Step 2: Run the tests and verify failure.** Expected: retrieval/provider interfaces are missing.
+- [x] **Step 3: Implement PostgreSQL full-text retrieval.** Use a migration-defined language-aware `tsvector` or generated search column, parameterized `websearch_to_tsquery`, stable rank plus id tie-break, top 5, and bounded context assembly. Keep retrieval behind repository/service APIs.
+- [x] **Step 4: Implement LLM boundary and answer policy.** Add provider interface/configuration and deterministic fake. Mark retrieved text as untrusted data in model instructions; require citations for factual claims; return no-evidence response without calling provider when retrieval is empty/under threshold; honor cancellation and timeout.
+- [x] **Step 5: Verify and document.** Run retrieval tests and versioned evaluation corpus assertions for relevant chunk, source and page citation; expected: known questions retrieve expected sources and empty corpus gives abstention.
+- [x] **Step 6: Commit.** `git commit -am "feat: add grounded PostgreSQL retrieval"` (include new files explicitly).
 
 ## Task 6: Implement durable conversations and streaming chat API
 
@@ -126,11 +126,11 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** Authenticated users can `GET/POST /api/v1/conversations`, `GET/DELETE /api/v1/conversations/:id`, `GET /api/v1/conversations/:id/messages`; users see only owned conversations. `POST /api/v1/chat` accepts `{ conversationId?, message, requestId }`. SSE event schemas: `message.started`, `message.delta`, `citations`, `message.completed`, `message.failed`; all include conversation/message ids and stable JSON data. `requestId` is unique per user and idempotent.
 
-- [ ] **Step 1: Write failing API/stream tests.** Test owner isolation on every conversation/message endpoint, create/list/archive/delete behavior, request idempotency, persisted user message before generation, citations mapped to stored chunks, exact successful event order, arbitrary byte chunk parsing, provider error, client disconnect/cancel, and no completion event for partial failure.
-- [ ] **Step 2: Run the tests and verify failure.** Expected: persisted conversations and chat event contract are missing.
-- [ ] **Step 3: Implement conversation service.** Enforce ownership in repository query predicates, persist title/created/updated fields, messages and status, and explicit retention/delete behavior. Never authorize based on frontend role alone.
-- [ ] **Step 4: Implement chat orchestration and SSE controller.** Save the user message before retrieval/provider call; stream validated deltas; emit citations from retrieved chunks; transactionally finalize assistant message/citations; mark interrupted or failed output accurately; cancel upstream provider on disconnect; idempotency prevents duplicate user turns.
-- [ ] **Step 5: Verify and document.** Run chat/conversation integration tests against PostgreSQL and fake LLM; expected: restart persistence and cross-owner denial pass, failures stay non-completed.
+- [x] **Step 1: Write failing API/stream tests.** Test owner isolation on every conversation/message endpoint, create/list/archive/delete behavior, request idempotency, persisted user message before generation, citations mapped to stored chunks, exact successful event order, provider error, client disconnect/cancel, and no completion event for partial failure. Client-side arbitrary byte chunk parsing is verified with the SSE parser in Task 8.
+- [x] **Step 2: Run the tests and verify failure.** Expected: persisted conversations and chat event contract are missing.
+- [x] **Step 3: Implement conversation service.** Enforce ownership in repository query predicates, persist title/created/updated fields, messages and status, and explicit retention/delete behavior. Never authorize based on frontend role alone.
+- [x] **Step 4: Implement chat orchestration and SSE controller.** Save the user message before retrieval/provider call; stream validated deltas; emit citations from retrieved chunks; transactionally finalize assistant message/citations; mark interrupted or failed output accurately; cancel upstream provider on disconnect; idempotency prevents duplicate user turns.
+- [x] **Step 5: Verify and document.** Run chat/conversation integration tests against PostgreSQL and fake LLM; expected: restart persistence and cross-owner denial pass, failures stay non-completed.
 - [ ] **Step 6: Commit.** `git commit -am "feat: persist conversations and stream grounded chat"` (include new files explicitly).
 
 ## Task 7: Build Angular authentication shell and Admin workflows
