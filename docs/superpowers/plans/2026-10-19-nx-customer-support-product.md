@@ -6,7 +6,7 @@
 
 **Architecture:** Replace the runtime Express/SQLite demo with an integrated Nx workspace containing one Angular app and one modular NestJS API. PostgreSQL via TypeORM is the durable store; browser-safe API contracts are separated from server entities; document and LLM providers sit behind interfaces; local PostgreSQL and file storage support development.
 
-**Tech Stack:** Node 24.21.x; Nx 23.2.x or later compatible patch; Angular 22.1.x; NestJS 11.x; TypeScript 6.0.x; PostgreSQL; TypeORM; Angular; Nx Jest/Vitest-compatible generated test setup; Playwright for end-to-end tests. Pin exact patch versions and commit `package-lock.json`; keep all `nx`/`@nx/*` versions synchronized. Use official Nx/Angular compatibility tables to confirm exact versions immediately before scaffold.
+**Tech Stack:** Node 24.21.x; Nx 23.3.0; Angular 22.2.3; NestJS 11.2.7; TypeScript 6.0.3; PostgreSQL; TypeORM; Nx Jest/Vitest test runners; Playwright for end-to-end tests. Pin exact patch versions and commit `package-lock.json`; keep all `nx`/`@nx/*` versions synchronized. Angular 22.2.3 is selected because npm audit identified a high-severity advisory affecting Angular Router before 22.2.0; Nx 23.3 supports current Angular versions.
 
 **Spec:** `docs/superpowers/specs/2026-10-18-nx-customer-support-product-design.md`
 
@@ -59,7 +59,7 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** Produces Nx project names `web`, `api`, Nx commands `serve`, `build`, `lint`, `test`, and local PostgreSQL service `postgres` for later tasks.
 
-- [ ] **Step 1: Pin a compatible toolchain.** Verify official Nx Angular matrix, Angular version compatibility, and Nx Nest support. Use Nx >=23.2, Angular 22.1, NestJS 11, Node 24.21.x and TypeScript 6.0.x; record exact patch versions in the lockfile and version rationale in `docs/product/architecture.md`.
+- [ ] **Step 1: Pin a compatible toolchain.** Verify official Nx Angular matrix and Angular runtime compatibility. Use Nx 23.3.0, Angular 22.2.3, NestJS 11.2.7, Node 24.21.x and TypeScript 6.0.3; record exact patch versions in the lockfile and version rationale in `docs/product/architecture.md`.
 - [ ] **Step 2: Create the integrated workspace skeleton.** Generate Angular `apps/web` and NestJS `apps/api`; align every `@nx/*` package version; enable strict TypeScript and lint/test/build targets; add root scripts forwarding to `nx`.
 - [ ] **Step 3: Configure PostgreSQL for local development.** Add Compose health check, persistent named volume, safe `.env.example`, ignored local env/runtime uploads, and documented start/stop/reset commands. Do not add credentials to tracked defaults beyond disposable local-only values.
 - [ ] **Step 4: Write failing health smoke tests.** Add an API integration test for `GET /api/v1/health` returning readiness status and a web smoke test for the Angular root shell. Run and verify failure because the routes are not implemented.
