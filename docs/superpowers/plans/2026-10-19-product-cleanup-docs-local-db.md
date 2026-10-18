@@ -1,6 +1,6 @@
 # Product Cleanup, Documentation, and Local Database Implementation Plan
 
-**Status:** Awaiting user review  
+**Status:** Approved; implementation in progress
 **Date:** 2026-10-19
 
 > **For agentic workers:** Execute this plan task by task. Keep one commit per task, as requested. Use `superpowers:executing-plans` and verify each change before committing it.
@@ -44,12 +44,12 @@
 
 **Interfaces:** No product API changes. Keep `npm test`, `npm run test:api`, `npm run test:e2e`, `admin:create`, and migration commands. Remove `legacy:*` and `test:legacy` scripts. Keep any dependency used by NestJS, Angular, or the maintained tests, including Express types/runtime required by Nest's HTTP adapter.
 
-- [ ] **Step 1: Record the active runtime boundary.** Run `git ls-files src frontend seed tests scripts`; identify tracked Express-only files and verify `scripts/run-tests.cjs` remains required by `npm test`.
-- [ ] **Step 2: Run baseline verification.** Run `npm test`, `npm run test:legacy`, `npm run lint`, and `npm run build`; all current Nx targets and the four legacy smoke tests must pass before cleanup.
-- [ ] **Step 3: Remove Express-only runtime files and package scripts.** Delete the paths listed above; remove only confirmed legacy-only package dependencies and update the lockfile using `npm uninstall` where applicable. Preserve all current NestJS/Angular dependencies.
-- [ ] **Step 4: Archive historical context and remove stale active commands.** Move the legacy guide to `docs/history/express-demo.md` and rewrite it as a short archival note with no supported run commands. Update active architecture/development/README pages and label baseline/workshop descriptions as historical.
-- [ ] **Step 5: Verify the retired app is no longer runnable or referenced by active docs.** Run `npm test`, `npm run lint`, `npm run build`, `git diff --check`, and `rg -n "legacy:(start|dev|setup)|test:legacy|src/index.js|SQLite demo" README.md docs/product/architecture.md docs/product/development.md docs/product/testing.md package.json`; expected: Nx tasks pass and `rg` has no matches in active docs. Historical implementation logs/archive may retain past command names.
-- [ ] **Step 6: Commit.** `chore: remove retired Express demo runtime`.
+- [x] **Step 1: Record the active runtime boundary.** `git ls-files` identified the legacy app files; `scripts/run-tests.cjs` remains the root `npm test` runner.
+- [x] **Step 2: Run baseline verification.** `npm test`, `npm run test:legacy` (4/4), `npm run lint`, and `npm run build` passed before cleanup.
+- [x] **Step 3: Remove Express-only runtime files and package scripts.** Removed the retired runtime and commands; retained shared dependencies and workshop artifacts.
+- [x] **Step 4: Archive historical context and remove stale active commands.** Replaced the old guide with an archive note and updated active docs and historical labels.
+- [x] **Step 5: Verify the retired app is no longer runnable or referenced by active docs.** Post-cleanup `npm test`, `npm run lint`, `npm run build`, `git diff --check` passed; the stale-reference search returned no active matches.
+- [x] **Step 6: Commit.** `chore: remove retired Express demo runtime`.
 
 ### Task 2: Create exact-case local and guarded test databases
 

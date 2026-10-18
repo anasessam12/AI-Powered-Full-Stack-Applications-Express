@@ -9,7 +9,7 @@ The product is an Nx integrated monorepo and a single-organization modular monol
 - PostgreSQL 18.6 is the durable store. TypeORM entities and versioned migrations own schema changes; schema synchronization is disabled.
 - `libs/api-contract`: browser-safe API contracts; server persistence entities are not shared with the browser.
 
-The existing Express/SQLite application remains a migration reference while the replacement reaches acceptance. `npm start` and `npm run dev` target the new Angular product. `npm run legacy:start`, `npm run legacy:dev`, and `npm run test:legacy` run the historical implementation and its tests.
+The retired Express/SQLite workshop application is preserved as a short historical note under `docs/history/express-demo.md`; it is not part of the product runtime. `npm start` and `npm run dev` target the Angular product.
 
 ## Toolchain and compatibility
 

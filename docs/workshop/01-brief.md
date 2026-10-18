@@ -26,7 +26,7 @@
 
 | المصدر | ما يصفه | طريقة استخدامه |
 | --- | --- | --- |
-| `README.md` و`package.json` | Express + SQLite + OpenRouter وواجهة HTML | نقطة انطلاق التنفيذ الحالي |
+| `README.md` و`package.json` وقت إعداد الورشة | Express + SQLite + OpenRouter وواجهة HTML | baseline تاريخي؛ التطبيق الجاري هو منتج Nx الموثق في README الحالي |
 | `frontend/index.html` | login وhealth ورفع مستند وسؤال وstreaming وcitations | جرد السلوك الفعلي للـmigration |
 | `src/index.js` | API الحالي؛ chat عبر POST وSSE | مرجع عقد التوافق الحالي |
 | `artifacts/BRD.md` وبقية artifacts | تصور سابق: FastAPI وChromaDB وSQLite وRedis وlocal LLM | مرجع تاريخي؛ لا تُنقل متطلباته تلقائيًا |

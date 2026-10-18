@@ -4,7 +4,6 @@
 
 - `npm test`: run Angular and API unit/integration suites.
 - `npm run test:api`: run only the API suites.
-- `npm run test:legacy`: preserve the original Express demo smoke tests.
 - `npm run test:e2e`: run browser acceptance flows against a dedicated PostgreSQL database and deterministic fake provider.
 - `npx nx run-many -t lint test build`: run the full Nx quality gate. `npm test` and `npm run test:api` wrap the Jest command to enable Node VM modules for the PDF.js worker.
 

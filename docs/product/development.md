@@ -26,11 +26,10 @@ The API supports username/password sessions, Admin user management, document ing
 - `npm run admin:create`: securely prompt for and create the first Admin once.
 - `npm test`: run all Nx project tests. The script enables Node's VM modules for Jest because the maintained PDF parser uses the ESM PDF.js worker. `npm run test:api` runs the API suite. PostgreSQL integration tests also require `TEST_DATABASE_URL` pointing to a dedicated database ending in `_test`.
 - `npm run test:e2e`: run Playwright acceptance flows against a real Angular app, Nest API and dedicated PostgreSQL test database. The setup resets application tables and creates the fixed test Admin; it refuses database names without the `_test` suffix.
-- `npm run test:legacy`: run the existing Express reference tests.
 - `docs/product/testing.md`: integration-test setup, deterministic provider tests, and retrieval evaluation conventions.
 - `npm run lint`: run Nx lint targets.
 - `npm run build`: run Nx builds.
 - `docker compose down`: stop local PostgreSQL while retaining its named volume.
-- `docker compose down -v`: remove the local database volume and all its data.
+- Do not use `docker compose down -v` for routine shutdown; it removes the local database volume and all its data.
 
 `OPENROUTER_API_KEY` is blank in the template. Add a real provider key only to local ignored `.env`; never commit it or copy it into browser settings, docs, prompts, or logs.

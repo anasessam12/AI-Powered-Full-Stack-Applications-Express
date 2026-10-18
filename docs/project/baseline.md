@@ -1,4 +1,6 @@
-# Baseline — AI Customer Support Assistant (Express)
+# Workshop baseline — AI Customer Support Assistant (Express)
+
+Historical source snapshot only; the Express runtime has been retired. See [the archive note](../history/express-demo.md).
 
 Status: Verified for preparation, 18 October 2026.
 

@@ -14,13 +14,9 @@
     "test": "node scripts/run-tests.cjs",
     "test:api": "node scripts/run-tests.cjs api",
     "test:e2e": "playwright test -c apps/web-e2e/playwright.config.ts",
-    "test:legacy": "node --test tests/app.test.js tests/http.test.js",
     "db:migrate": "node apps/api/scripts/typeorm-cli.cjs -d apps/api/src/database/data-source.ts migration:run",
     "db:revert": "node apps/api/scripts/typeorm-cli.cjs -d apps/api/src/database/data-source.ts migration:revert",
-    "admin:create": "ts-node -P apps/api/tsconfig.app.json --transpile-only apps/api/src/cli/bootstrap-admin.ts",
-    "legacy:setup": "node scripts/setup.js",
-    "legacy:start": "node src/index.js",
-    "legacy:dev": "node --watch src/index.js"
+    "admin:create": "ts-node -P apps/api/tsconfig.app.json --transpile-only apps/api/src/cli/bootstrap-admin.ts"
   },
   "dependencies": {
     "@angular/common": "22.2.3",

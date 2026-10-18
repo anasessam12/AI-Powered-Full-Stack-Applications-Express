@@ -101,3 +101,6 @@ This log records implementation checkpoints and verification evidence as the pro
 **Verification:** `npm test`, `npm run lint`, and `npm run build` all pass. Nx recognizes the isolated `web:serve-e2e` target; Playwright parses and lists both acceptance tests; `git diff --check` is clean. Session expiry and cross-owner conversation denial remain covered by PostgreSQL API integration tests.
 
 **Limit:** This environment has no Docker executable or accessible database credentials/service on the configured test port, so real PostgreSQL migrations and browser acceptance cannot be executed here. CI contains the clean PostgreSQL and browser path.
+# Implementation log
+
+Entries below preserve the results observed at each historical phase. The Express/SQLite runtime and its smoke tests have since been retired; see [the archive note](../history/express-demo.md). Past command names describe checks run at that time and are not current run instructions.
