@@ -1,21 +1,15 @@
-import * as argon2 from 'argon2';
 import { DataSource, EntityManager } from 'typeorm';
 import { User, UserRole } from '../database/entities/user.entity';
+import { hashPassword } from '../security/password-hasher';
+import { validatePassword, validateUsername } from '../security/username';
+
+export { normalizeUsername } from '../security/username';
 
 const ADMIN_BOOTSTRAP_LOCK = 'customer-support-initial-admin-bootstrap';
 
-export function normalizeUsername(username: string): string {
-  return username.trim().toLowerCase();
-}
-
 export function validateInitialAdminInput(username: string, password: string): string {
-  const normalizedUsername = normalizeUsername(username);
-  if (!/^[a-z0-9][a-z0-9._-]{2,63}$/.test(normalizedUsername)) {
-    throw new Error('Username must be 3–64 characters: letters, numbers, dot, underscore, or hyphen.');
-  }
-  if (Buffer.byteLength(password, 'utf8') < 12 || Buffer.byteLength(password, 'utf8') > 1024) {
-    throw new Error('Password must contain between 12 and 1024 UTF-8 bytes.');
-  }
+  const normalizedUsername = validateUsername(username);
+  validatePassword(password);
   return normalizedUsername;
 }
 
@@ -23,13 +17,7 @@ export async function createInitialAdmin(
   dataSource: DataSource,
   username: string,
   password: string,
-  hashPassword = (value: string) =>
-    argon2.hash(value, {
-      type: argon2.argon2id,
-      memoryCost: 65_536,
-      timeCost: 3,
-      parallelism: 1,
-    }),
+  passwordHasher = hashPassword,
 ): Promise<User> {
   const normalizedUsername = validateInitialAdminInput(username, password);
 
@@ -45,7 +33,7 @@ export async function createInitialAdmin(
     const admin = users.create({
       username: username.trim(),
       normalizedUsername,
-      passwordHash: await hashPassword(password),
+      passwordHash: await passwordHasher(password),
       role: UserRole.ADMIN,
       isActive: true,
     });

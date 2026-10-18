@@ -86,13 +86,13 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** `POST /api/v1/auth/login { username, password }`; `POST /api/v1/auth/logout`; `GET /api/v1/auth/session`; Admin-only `GET/POST/PATCH /api/v1/users`. Browser session uses opaque random cookie; DB stores only its hash. Session response includes user id, normalized username, role, and CSRF token. Protected writes require matching CSRF header.
 
-- [ ] **Step 1: Write failing API tests.** Cover valid/invalid login, generic credential errors, disabled user rejection, no session cookie on failure, cookie flags, hash-only session persistence, session expiry/revocation/logout, CSRF denial, login throttling, Admin account provisioning, and Agent-forbidden user management.
-- [ ] **Step 2: Run the tests and verify failure.** Expected: routes/guards/session behavior do not exist.
-- [ ] **Step 3: Implement password and session services.** Argon2id password hashes; cryptographically random opaque token; hash token at rest; rotation on login; expiry/revocation; HTTP-only, same-site cookie; secure flag in production; server-side session validation.
-- [ ] **Step 4: Implement authentication and role guards.** Add validated DTOs, normalized usernames, generic login errors, CSRF token lifecycle/header check, login rate limiting, and API-level role enforcement. Ensure production startup never seeds demo identities.
-- [ ] **Step 5: Implement Admin user management.** Create Agent/Admin accounts, activate/deactivate, change role with last-Admin safety, and never return hashes. Require fresh authorization on every request.
-- [ ] **Step 6: Verify and document.** Run auth/user PostgreSQL integration tests and lint/typecheck; document cookie/CSRF/error contract and safe account setup. Expected: all authentication/session/user-management cases pass; conversation owner-isolation cases are verified in Task 6.
-- [ ] **Step 7: Commit.** `git commit -am "feat: add username password auth and role access"` (include new files explicitly with `git add`).
+  - [x] **Step 1: Write failing API tests.** Cover valid/invalid login, generic credential errors, disabled user rejection, no session cookie on failure, cookie flags, hash-only session persistence, session expiry/revocation/logout, CSRF denial, login throttling, Admin account provisioning, and Agent-forbidden user management.
+  - [x] **Step 2: Run the tests and verify failure.** Expected: routes/guards/session behavior do not exist.
+  - [x] **Step 3: Implement password and session services.** Argon2id password hashes; cryptographically random opaque token; hash token at rest; rotation on login; expiry/revocation; HTTP-only, same-site cookie; secure flag in production; server-side session validation.
+  - [x] **Step 4: Implement authentication and role guards.** Add validated DTOs, normalized usernames, generic login errors, CSRF token lifecycle/header check, login rate limiting, and API-level role enforcement. Ensure production startup never seeds demo identities.
+  - [x] **Step 5: Implement Admin user management.** Create Agent/Admin accounts, activate/deactivate, change role with last-Admin safety, and never return hashes. Require fresh authorization on every request.
+  - [x] **Step 6: Verify and document.** Run auth/user PostgreSQL integration tests and lint/typecheck; document cookie/CSRF/error contract and safe account setup. Expected: all authentication/session/user-management cases pass; conversation owner-isolation cases are verified in Task 6.
+  - [x] **Step 7: Commit.** `git commit -am "feat: add username password auth and role access"` (include new files explicitly with `git add`).
 
 ## Task 4: Implement secure document upload, extraction, storage, and indexing lifecycle
 

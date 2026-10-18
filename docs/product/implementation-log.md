@@ -29,3 +29,13 @@ This log records implementation checkpoints and verification evidence as the pro
 **Environment note:** Docker remains unavailable. A temporary PostgreSQL cluster was initialized within the ignored worktree `var/` directory using the installed PostgreSQL 18 binaries and was bound to localhost only; the repository's existing PostgreSQL service and data were not changed.
 
 **Ruling:** Scope `test:legacy` to the two existing JavaScript test files. Node 24's default test discovery included the new PostgreSQL TypeScript integration test under `apps/api/test`, then attempted to run it without Jest/TypeScript module handling. The application suites remain separated: Nx/Jest for the new API and Node test runner for the archived Express reference.
+
+## Task 3 — Username/password authentication and role access
+
+**Status:** Complete; commit `feat: add username password auth and role access`.
+
+**Delivered:** Added login, session restore, logout, CSRF and role guards, cookie-backed opaque sessions (only token hashes persist), credential throttling, validated login/user DTOs, normalized usernames, and Admin-only user listing/provisioning/role/status updates with last-Admin protection. Passwords use Argon2id. Safe browser-facing contracts live in the Nx `api-contract` library; API and security behavior are documented.
+
+**Verification:** PostgreSQL-backed API integration suite passed 16/16 tests against the isolated `customer_support_task3_test` database; API lint passed. Full `npx nx run-many -t lint test build --skip-nx-cache --outputStyle=static` passed for four projects (the first broad run without a test database skipped DB-dependent suites; the explicit database run passed all 16). Legacy Express tests passed 4/4; `npm audit --omit=dev` reported zero vulnerabilities; `git diff --check` was clean.
+
+**Security coverage:** Tests verify generic credential errors, disabled and expired sessions, HttpOnly/SameSite cookie flags, token hashing at rest, CSRF enforcement, Admin role checks, account activation/role changes, last-Admin safety, logout revocation, and throttle responses.
