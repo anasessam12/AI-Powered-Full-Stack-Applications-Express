@@ -25,7 +25,7 @@ export interface ConversationMessageContract {
   content: string;
   status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'INTERRUPTED';
   createdAt: string;
-  citations: Array<Pick<ChatCitationContract, 'sourceName' | 'pageNumber' | 'section' | 'rank'>>;
+  citations: Array<Pick<ChatCitationContract, 'documentId' | 'sourceName' | 'pageNumber' | 'section' | 'rank'>>;
 }
 
 export interface SendChatMessageContract {

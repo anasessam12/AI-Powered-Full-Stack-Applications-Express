@@ -114,6 +114,15 @@ integrationSuite('document ingestion API', () => {
     expect(chunks).toHaveLength(1);
     expect(chunks[0].content).toContain('Customers may request a refund');
     expect(chunks[0].ordinal).toBe(0);
+
+    const agentSession = await login(agent.username, 'Document-agent-password-479!');
+    const source = await fetch(`${baseUrl}/api/v1/documents/${document.id}/content`, { headers: { cookie: agentSession.cookie } });
+    expect(source.status).toBe(200);
+    expect(source.headers.get('content-type')).toContain('text/markdown');
+    expect(source.headers.get('content-disposition')).toContain('refund-policy.md');
+    expect(source.headers.get('cache-control')).toBe('private, no-store');
+    expect(await source.text()).toContain('Customers may request a refund');
+    expect(JSON.stringify(document)).not.toContain('storageKey');
   });
 
   it('indexes plain text and extracts PDF text with source page metadata', async () => {

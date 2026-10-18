@@ -54,7 +54,7 @@ export class ConversationsService {
     return messages.map((message) => ({
       id: message.id, role: message.role, content: message.content, status: message.status, createdAt: message.createdAt,
       citations: (byMessage.get(message.id) ?? []).map((citation) => ({
-        id: citation.id, sourceName: citation.displaySource, pageNumber: citation.pageNumber, section: citation.section, rank: citation.rank,
+        id: citation.id, documentId: citation.documentId, sourceName: citation.displaySource, pageNumber: citation.pageNumber, section: citation.section, rank: citation.rank,
       })),
     }));
   }

@@ -1,8 +1,8 @@
 import {
   Controller,
+  Get,
   Delete,
   UseFilters,
-  Get,
   HttpCode,
   HttpStatus,
   UnauthorizedException,
@@ -10,6 +10,7 @@ import {
   ParseUUIDPipe,
   Post,
   Req,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,6 +18,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { AuthenticatedRequest } from '../auth/auth.types';
+import { Response } from 'express';
 import { CsrfGuard } from '../auth/guards/csrf.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { SessionGuard } from '../auth/guards/session.guard';
@@ -35,6 +37,19 @@ export class DocumentsController {
   @Get()
   list() {
     return this.documents.list();
+  }
+
+  @Get(':id/content')
+  async content(@Param('id', new ParseUUIDPipe()) id: string, @Res() response: Response): Promise<void> {
+    const file = await this.documents.openContent(id);
+    response.set({
+      'Content-Type': file.mimeType,
+      'Content-Disposition': `inline; filename*=UTF-8''${encodeURIComponent(file.displayName).replace(/['()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`)}`,
+      'Cache-Control': 'private, no-store',
+      'X-Content-Type-Options': 'nosniff',
+      'Content-Security-Policy': "default-src 'none'; sandbox",
+    });
+    response.send(file.content);
   }
 
   @Post()

@@ -30,6 +30,7 @@ There is no public registration or user deletion. Account creation returns the n
 | `GET` | `/documents` | Session | Safe document metadata, newest first |
 | `POST` | `/documents/:id/retry` | Admin + CSRF | Re-runs extraction and indexing for a failed document |
 | `DELETE` | `/documents/:id` | Admin + CSRF | `204`; removes the document, chunks, and stored bytes |
+| `GET` | `/documents/:id/content` | Session | Opens the stored source inline with private no-store headers |
 
 Accepted content is PDF, UTF-8 TXT, or UTF-8 Markdown. Files default to a 20 MiB limit, configurable with `DOCUMENT_MAX_BYTES` up to a hard 20 MiB ceiling. A SHA-256 uniqueness constraint prevents duplicate content. The API response never returns internal storage keys or filesystem paths. Failed extraction leaves a `FAILED` record with a sanitized error code and retains the original for Admin retry.
 

@@ -74,6 +74,12 @@ export class DocumentsService {
     }
   }
 
+  async openContent(id: string): Promise<{ displayName: string; mimeType: string; content: Buffer }> {
+    const document = await this.documents.findOneBy({ id, deletedAt: IsNull() });
+    if (!document) throw new NotFoundException('Document not found.');
+    return { displayName: document.displayName, mimeType: document.mimeType, content: await this.readStorage(document.storageKey) };
+  }
+
   async list(): Promise<Record<string, unknown>[]> {
     const documents = await this.documents.find({ where: { deletedAt: IsNull() }, order: { createdAt: 'DESC' } });
     return documents.map((document) => this.toSafeDocument(document));

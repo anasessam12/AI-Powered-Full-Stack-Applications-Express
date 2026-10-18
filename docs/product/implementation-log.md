@@ -81,3 +81,13 @@ This log records implementation checkpoints and verification evidence as the pro
 **Visual review:** The in-browser component review approved both the masthead and side rail and confirmed all mapped component regions. The chosen approved comp and direction rationale are retained in `docs/product/ui-direction-task7.md`. The CLI launcher was unavailable in this shell, so browser receipt and local sources were used instead of the CLI verify command.
 
 **Limit:** A live database-backed browser sign-in could not be validated as part of this unit/build pass; full-stack and browser acceptance remain in Task 9. Document processing status refreshes on user refresh; no automatic polling is implied.
+
+## Task 8 — Agent chat, citations, and conversation history
+
+**Status:** Implemented; verification complete, pending commit.
+
+**Delivered:** Added a streaming fetch client for the cookie/CSRF-protected chat endpoint, a typed SSE parser that handles LF/CRLF and arbitrary network chunk boundaries, durable conversation create/list/reopen, and an Agent chat screen for partial, completed, abstaining, failed, and cancelled replies. Citations display source, page/section, and open the original stored document. Added an authenticated `GET /documents/:id/content` response with inline disposition, `nosniff`, sandbox CSP, and private no-store caching. Conversation history now carries the safe document id needed to open citations.
+
+**Verification:** Angular tests pass 30/30 across 10 files; API unit tests pass 24/24. `api:build`, `web:build`, and both lint targets pass. The API integration suite reports six PostgreSQL suites skipped because `TEST_DATABASE_URL` is unset; source access is covered by unit tests and a PostgreSQL integration case for Task 9 verification. Web production build emits an `anyComponentStyle` warning for the chat component (6.96 kB against a 4 kB warning budget, below its 8 kB error budget).
+
+**Limit:** Interactive database-backed streaming was not exercised in this shell because there is no configured `DATABASE_URL` or `TEST_DATABASE_URL`. The source links point to the authenticated API route and use the same-site session cookie.

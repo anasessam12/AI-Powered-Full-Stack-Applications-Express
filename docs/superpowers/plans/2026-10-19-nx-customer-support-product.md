@@ -152,12 +152,12 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** Chat client sends `POST /api/v1/chat` with cookie credentials and CSRF header; SSE parser consumes event schemas from Task 6. Conversation client lists/reopens user-owned history. UI exposes answer status and citations as source/page links.
 
-- [ ] **Step 1: Write failing UI tests.** Cover conversation create/reopen, streaming text split at every event boundary, citation source display, insufficient evidence, empty/loading/error states, failed/interrupted answer, duplicate-submit prevention, and role-aware navigation.
-- [ ] **Step 2: Run tests and verify failure.** Expected: Agent workflow and SSE parser are absent.
-- [ ] **Step 3: Implement SSE parser and chat client.** Parse CRLF/LF SSE framing across arbitrary chunks, handle abort and failed events, update partial UI without treating it as completed, and pass stable request id for idempotency.
-- [ ] **Step 4: Implement conversation and citation UI.** Persist/reopen histories, show source and page/section, communicate evidence absence clearly, and retain useful local draft only when safe.
-- [ ] **Step 5: Verify UI tests and accessibility.** Run focused Angular tests; check stream announcement behavior and keyboard navigation without announcing every token noisily.
-- [ ] **Step 6: Commit.** `git commit -am "feat: add agent chat and conversation history"` (include new files explicitly).
+- [x] **Step 1: Write failing UI tests.** Cover conversation create/reopen, streaming text split at every event boundary, citation source display, insufficient evidence, empty/loading/error states, failed/interrupted answer, duplicate-submit prevention, and role-aware navigation.
+- [x] **Step 2: Run tests and verify failure.** Expected: Agent workflow and SSE parser are absent.
+- [x] **Step 3: Implement SSE parser and chat client.** Parse CRLF/LF SSE framing across arbitrary chunks, handle abort and failed events, update partial UI without treating it as completed, and pass stable request id for idempotency.
+- [x] **Step 4: Implement conversation and citation UI.** Persist/reopen histories, show source and page/section, communicate evidence absence clearly, and retain useful local draft only when safe.
+- [x] **Step 5: Verify UI tests and accessibility.** Run focused Angular tests; check stream announcement behavior and keyboard navigation without announcing every token noisily.
+- [x] **Step 6: Commit.** `feat: add agent chat and conversation history` (include new files explicitly).
 
 ## Task 9: Complete end-to-end acceptance, operations, and migration closeout
 
