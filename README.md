@@ -1,68 +1,30 @@
-# AI Customer Support Assistant — Express Edition
+# Fieldnote — Customer Support Knowledge Workspace
 
-This is the same customer-support chat app and frontend, with an Express.js backend and SQLite full-text search. It uses OpenRouter for answer generation; no local model server is needed. The demo support knowledge base is indexed automatically the first time the app starts.
+Fieldnote is an Nx monorepo for a private support workspace. Admins provision username/password accounts and maintain a searchable document library; Agents ask questions and receive streamed answers with citations. NestJS and PostgreSQL provide the API, sessions, indexing, retrieval, and conversation history. Angular provides the web app.
 
-## Requirements
+## Run locally
 
-- Node.js 22.13 or newer (includes npm)
-- An OpenRouter API key and a model ID available to your OpenRouter account
-
-## Windows setup (PowerShell)
-
-Run these commands from the project folder. This matters: running setup from `C:\Users\pc` will not find this project's files.
+Requirements: Node.js 24.21.0, npm 11, and Docker Compose v2.
 
 ```powershell
-cd E:\temp\AI-Powered-Full-Stack-Applications-Express
-node --version
-npm install
-npm run setup
-notepad .env
-```
-
-In `.env`, set your OpenRouter credentials, then save and close Notepad:
-
-```dotenv
-OPENROUTER_API_KEY=your_openrouter_api_key
-OPENROUTER_MODEL=provider/model-id
-```
-
-Use the exact model ID shown in your OpenRouter account. Then start the app:
-
-```powershell
+Copy-Item .env.example .env
+npm ci
+docker compose up -d postgres
+npm run db:migrate
+npm run admin:create
 npm start
 ```
 
-Open [http://localhost:8000](http://localhost:8000). Keep the terminal open while you use the app; press `Ctrl+C` there to stop it.
+Open `http://localhost:4200`. The bootstrap command prompts for the one-time Admin username and a strong password; no default account is seeded. Add an OpenRouter key and model to the ignored local `.env` to enable live answers. Tests use a deterministic provider and do not need provider credentials.
 
-For the demo login, enter `admin` (document upload) or `agent` (chat). This demo keeps the original username-only login and does not use account passwords. The sample NexusPlay support knowledge base is ready on first startup, so questions like “I forgot my password” can be answered. The example company and policies are fictional.
-
-## Useful commands
+## Quality checks
 
 ```powershell
-npm run dev    # restart the server when source files change
-npm test       # run the local checks
-npm run setup  # create .env if needed and initialize/check SQLite
+npm test
+npm run lint
+npm run build
 ```
 
-Documents in PDF, TXT, or Markdown format can be uploaded by the `admin` demo user. Indexed text is stored in `data/app.db`; original uploads are stored under `data/uploads`. Both are created automatically and remain on your computer.
+PostgreSQL integration and browser acceptance tests require a disposable database named with the `_test` suffix. Set `TEST_DATABASE_URL` to that database, then run `npm run test:e2e`. The Playwright setup truncates application tables and bootstraps a known test Admin, so never point it at a shared or production database.
 
-## Troubleshooting
-
-- `npm` or `node` is not recognized: install Node.js 22.13+ and open a new PowerShell window.
-- `Cannot find module ...`: confirm the current directory is this project, then run `npm install` again.
-- OpenRouter setup error: check that `.env` is in the project root and both OpenRouter values are filled in, then restart `npm start`.
-- “I don't have enough information to answer that”: ask about the indexed support knowledge base or upload a relevant document as `admin`.
-- Port 8000 is busy: set `PORT=8001` in `.env`, restart, then open `http://localhost:8001`.
-
-## Project layout
-
-```text
-frontend/                 Existing chat interface
-src/index.js              Express API and static frontend server
-src/db.js                 SQLite schema, demo users, and starter knowledge base
-src/rag.js                SQLite FTS5 retrieval and grounded prompt
-src/openrouter.js         OpenRouter streaming client
-seed/knowledge_base.json  Small starter dataset extracted from the source project
-data/                     SQLite database and uploaded documents (created at runtime)
-artifacts/                Original project specifications and workshop materials
-```
+See [local development](docs/product/development.md), [testing](docs/product/testing.md), [operations](docs/product/operations.md), [architecture](docs/product/architecture.md), and [security](docs/product/security.md). The original Express/SQLite workshop application remains documented as a historical reference in [legacy-express.md](docs/product/legacy-express.md); `npm run legacy:start` and `npm run test:legacy` are compatibility commands, not the product entrypoint.

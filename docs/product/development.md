@@ -15,7 +15,7 @@
 6. Create the initial Admin in an interactive terminal: `npm run admin:create`. Enter a unique username and a strong password when prompted; the password is hidden and is never seeded or logged.
 7. Open `http://localhost:4200`. The health endpoint is `http://localhost:3000/api/v1/health` and returns 503 if PostgreSQL is unavailable.
 
-The API supports username/password sessions, Admin user management, document ingestion, durable owner-scoped conversation history, and grounded streaming chat. The Angular shell and agent/admin workflows are completed in the next implementation tasks. Do not interpret the development database credentials as product user credentials or production authentication.
+The API supports username/password sessions, Admin user management, document ingestion, durable owner-scoped conversation history, and grounded streaming chat. Angular provides the Admin and Agent workflows. Do not interpret the development database credentials as product user credentials or production authentication.
 
 ## Common commands
 
@@ -25,6 +25,7 @@ The API supports username/password sessions, Admin user management, document ing
 - `npm run db:revert`: revert the last migration; use only when its effects are understood.
 - `npm run admin:create`: securely prompt for and create the first Admin once.
 - `npm test`: run all Nx project tests. The script enables Node's VM modules for Jest because the maintained PDF parser uses the ESM PDF.js worker. `npm run test:api` runs the API suite. PostgreSQL integration tests also require `TEST_DATABASE_URL` pointing to a dedicated database ending in `_test`.
+- `npm run test:e2e`: run Playwright acceptance flows against a real Angular app, Nest API and dedicated PostgreSQL test database. The setup resets application tables and creates the fixed test Admin; it refuses database names without the `_test` suffix.
 - `npm run test:legacy`: run the existing Express reference tests.
 - `docs/product/testing.md`: integration-test setup, deterministic provider tests, and retrieval evaluation conventions.
 - `npm run lint`: run Nx lint targets.

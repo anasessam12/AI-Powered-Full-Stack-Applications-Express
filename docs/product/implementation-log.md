@@ -72,7 +72,7 @@ This log records implementation checkpoints and verification evidence as the pro
 
 ## Task 7 — Angular authentication and Admin workflows
 
-**Status:** Implemented; verification complete, pending commit.
+**Status:** Complete; committed as `feat: add Angular auth and admin workspace`.
 
 **Delivered:** In-memory cookie-session client with API restore and CSRF headers; generic username/password login; role-guarded Admin navigation; Admin user provisioning, role and activation changes; document upload, status, retry, and removal flows; mobile-aware split-flap visual direction and component-review approval. Agent navigation does not expose Admin screens. The `/chat` Agent route is explicitly interim and is replaced in Task 8.
 
@@ -84,10 +84,20 @@ This log records implementation checkpoints and verification evidence as the pro
 
 ## Task 8 — Agent chat, citations, and conversation history
 
-**Status:** Implemented; verification complete, pending commit.
+**Status:** Complete; committed as `feat: add agent chat and conversation history`.
 
 **Delivered:** Added a streaming fetch client for the cookie/CSRF-protected chat endpoint, a typed SSE parser that handles LF/CRLF and arbitrary network chunk boundaries, durable conversation create/list/reopen, and an Agent chat screen for partial, completed, abstaining, failed, and cancelled replies. Citations display source, page/section, and open the original stored document. Added an authenticated `GET /documents/:id/content` response with inline disposition, `nosniff`, sandbox CSP, and private no-store caching. Conversation history now carries the safe document id needed to open citations.
 
 **Verification:** Angular tests pass 30/30 across 10 files; API unit tests pass 24/24. `api:build`, `web:build`, and both lint targets pass. The API integration suite reports six PostgreSQL suites skipped because `TEST_DATABASE_URL` is unset; source access is covered by unit tests and a PostgreSQL integration case for Task 9 verification. Web production build emits an `anyComponentStyle` warning for the chat component (6.96 kB against a 4 kB warning budget, below its 8 kB error budget).
 
 **Limit:** Interactive database-backed streaming was not exercised in this shell because there is no configured `DATABASE_URL` or `TEST_DATABASE_URL`. The source links point to the authenticated API route and use the same-site session cookie.
+
+## Task 9 — End-to-end acceptance, operations, and migration closeout
+
+**Status:** Implemented; local database-backed acceptance verification is blocked by the absence of a PostgreSQL test service in this environment.
+
+**Delivered:** Added Playwright flows for one-time Admin bootstrap/login, Agent provisioning, TXT upload/indexing, streamed source-cited answer, history after reload, Agent UI and API denial for Admin access, deterministic provider failure, unsupported upload, and logout. Playwright setup only accepts `TEST_DATABASE_URL` with a `_test` database suffix, applies migrations, resets application tables, and seeds a known test-only Admin. CI provisions PostgreSQL and Chromium, migrates, tests, runs browser acceptance, lints, and builds. Replaced the Express-first README with the Nx product workflow and retained the original instructions in `docs/product/legacy-express.md`. Added operations and recovery-boundary guidance.
+
+**Verification:** `npm test`, `npm run lint`, and `npm run build` all pass. Nx recognizes the isolated `web:serve-e2e` target; Playwright parses and lists both acceptance tests; `git diff --check` is clean. Session expiry and cross-owner conversation denial remain covered by PostgreSQL API integration tests.
+
+**Limit:** This environment has no Docker executable or accessible database credentials/service on the configured test port, so real PostgreSQL migrations and browser acceptance cannot be executed here. CI contains the clean PostgreSQL and browser path.

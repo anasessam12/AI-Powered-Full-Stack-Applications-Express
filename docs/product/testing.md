@@ -5,9 +5,12 @@
 - `npm test`: run Angular and API unit/integration suites.
 - `npm run test:api`: run only the API suites.
 - `npm run test:legacy`: preserve the original Express demo smoke tests.
+- `npm run test:e2e`: run browser acceptance flows against a dedicated PostgreSQL database and deterministic fake provider.
 - `npx nx run-many -t lint test build`: run the full Nx quality gate. `npm test` and `npm run test:api` wrap the Jest command to enable Node VM modules for the PDF.js worker.
 
 PostgreSQL integration tests require `TEST_DATABASE_URL` to point to a dedicated disposable database whose name ends in `_test`. They apply TypeORM migrations and truncate only the known application tables. Do not point this variable at a developer, shared, staging, or production database. Tests do not run schema synchronization.
+
+The Playwright global setup applies migrations, clears application tables, and creates `support.e2e.admin` with a fixed test-only password. The E2E API replaces OpenRouter with a deterministic provider; the sentinel question `__provider_failure__` simulates an upstream error. Playwright runs one worker because scenarios share this disposable database. CI provisions PostgreSQL and Chromium. Locally install Chromium once with `npx playwright install chromium`.
 
 ## Test boundaries
 

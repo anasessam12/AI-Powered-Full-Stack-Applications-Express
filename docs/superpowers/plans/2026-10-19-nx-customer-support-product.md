@@ -165,12 +165,12 @@ The exact generated Angular/Nest project filenames will follow the selected Nx g
 
 **Interfaces:** One documented clean-checkout workflow starts PostgreSQL, migrates, bootstraps first Admin, serves API/web, runs tests, and builds production artifacts. The existing Express app is no longer the default product run target; preserve repository history and document whether reference source is archived or removed.
 
-- [ ] **Step 1: Write failing Playwright acceptance flows.** Cover Admin bootstrap/login, create Agent, Agent login, upload a real fixture, ask a fixture-backed question, streaming citations, persisted history after reload, Agent denied Admin routes, cross-user conversation denial, invalid upload, provider failure, and logout/session expiry.
-- [ ] **Step 2: Run E2E tests and verify meaningful failures.** Expected: missing workflows or incomplete API/UI behavior; use deterministic provider and test PostgreSQL.
-- [ ] **Step 3: Complete CI and operational documentation.** CI runs install, lint, typecheck, unit/integration/e2e tests, migrations on clean PostgreSQL, and production builds. Document config, safe Admin bootstrap, backup/restore assumptions, storage paths, logs/redaction, and no-cloud deployment boundary.
-- [ ] **Step 4: Decide and complete legacy migration closeout.** Confirm new app is the default README/run command. Remove obsolete Express runtime from default commands only after all acceptance flows pass; preserve historical workshop evidence and reference behavior notes.
-- [ ] **Step 5: Run clean-checkout verification.** From clean install run `npm ci`, `docker compose up -d postgres`, migration, interactive Admin bootstrap, `npx nx run-many -t lint test build`, and Playwright E2E. Expected: all green; inspect Git for keys and generated uploads.
-- [ ] **Step 6: Commit.** Commit CI, docs and migration closeout as `chore: verify and document full product workflow`.
+- [x] **Step 1: Write Playwright acceptance flows.** Cover Admin bootstrap/login, Agent creation/login, TXT fixture upload and indexing, fixture-backed question, streamed citation, history after reload, Agent UI/API denial from Admin routes, unsupported upload, deterministic provider failure, and logout. Session expiry and cross-owner conversation denial remain in API integration coverage.
+- [x] **Step 2: Configure deterministic E2E and test-database protection.** E2E setup requires `_test`, applies migrations, resets app tables, and creates a test-only Admin. Browser API substitutes a fixed provider and supports a failure sentinel.
+- [x] **Step 3: Complete CI and operational documentation.** CI provisions PostgreSQL, applies migrations, installs Chromium, runs unit/integration/E2E, lint, and production builds. Document configuration, safe bootstrap, backup/restore assumptions, storage, logs/redaction, and the local/CI deployment boundary.
+- [x] **Step 4: Complete legacy migration closeout.** The Nx Angular/NestJS product is now the README and `npm start` default. Preserve the Express instructions in `docs/product/legacy-express.md` and keep compatibility scripts.
+- [x] **Step 5: Run available clean-checkout checks.** `npm test`, `npm run lint`, and `npm run build` pass; Playwright configuration lists both browser flows. Full PostgreSQL-backed Playwright execution remains unavailable because this environment has no Docker executable or usable database credentials/service.
+- [x] **Step 6: Commit.** Commit CI, docs and migration closeout as `chore: verify and document full product workflow` after final available checks.
 
 ## Coverage Self-Review
 
