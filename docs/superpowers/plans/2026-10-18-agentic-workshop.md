@@ -56,4 +56,14 @@
 - [x] سجّل inventory السلوك مع history stubs والاعتماد على provider؛ اعتمد dataset اصطناعية وfixture strategy للمقارنة.
 - [x] ثبّت target versions وحد الميزانية/الوقت لكل run في tooling. Gate: لا توجد run تبدأ بلا manifest؛ القرارات التقنية غير المحسومة تظل قرارات قبل التنفيذ.
 
-### Task 2: تثبيت عقد التقييم وسيناريوهاته`n`n**Files:** Create `docs/workshop/evaluation-checklist.md`; Read `src/index.js`, `frontend/index.html`, protocol.`n`n**Interfaces:** Consumes baseline inventory؛ Produces checklist version ثابتة وfixture definitions: auth success/401، stream success/error/split، upload allowed/denied.`n`n- [ ] انسخ EVAL-01..08 من البروتوكول، وحدد خطوات إعادة الإنتاج وpass/fail لكل منها.`n- [ ] عرّف fixtures بأحداث `token`, `citations`, `done`, `error` حسب payloads الموجودة. Assertions: لا فقد أو تكرار مع split UTF-8/event، ولا إضافة افتراضية لتاريخ محادثات.`n- [ ] عرّف فحص POST/body/Authorization وعدم تسرب provider credential. حدّد error قبل headers وبعدها، وسياسة EOF طبقًا للعقد المعتمد.`n- [ ] سجّل درجات rubric وطريقة قياس effort قبل رؤية أول نتيجة. Gate: مراجع يقدر يعيد نفس التقييم بدون قراءة chat التنفيذ.`n`n### Task 3: تنفيذ التجارب الأربع وتقييم الناتج الأول
+### Task 2: تثبيت عقد التقييم وسيناريوهاته
+
+**Files:** Create `docs/workshop/evaluation-checklist.md`; Read `src/index.js`, `frontend/index.html`, protocol.
+
+**Interfaces:** Consumes baseline inventory؛ Produces checklist version ثابتة وfixture definitions: auth success/401، stream success/error/split، upload allowed/denied.
+
+- [x] انسخ EVAL-01..08 من البروتوكول، وحدد خطوات إعادة الإنتاج وpass/fail لكل منها.
+- [x] عرّف fixtures بأحداث `token`, `citations`, `done`, `error` حسب payloads الموجودة. Assertions: لا فقد أو تكرار مع split UTF-8/event، ولا إضافة افتراضية لتاريخ محادثات.
+- [x] عرّف فحص POST/body/Authorization وعدم تسرب provider credential. حدّد error قبل headers وبعدها، وسياسة EOF طبقًا للعقد المعتمد.
+- [x] سجّل درجات rubric وطريقة قياس effort قبل رؤية أول نتيجة. Gate: مراجع يقدر يعيد نفس التقييم بدون قراءة chat التنفيذ.
+### Task 3: تنفيذ التجارب الأربع وتقييم الناتج الأول

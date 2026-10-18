@@ -1,0 +1,30 @@
+{
+  "notice": "Synthetic test-only values; do not use these tokens against a real service.",
+  "login": {
+    "admin": {
+      "request": { "method": "POST", "path": "/api/v1/auth/login", "body": { "username": "admin" } },
+      "response": { "status": 200, "body": { "session_token": "synthetic-admin-session", "user_id": "fixture-admin", "display_name": "Fixture Admin", "role": "admin" } }
+    },
+    "agent": {
+      "request": { "method": "POST", "path": "/api/v1/auth/login", "body": { "username": "agent" } },
+      "response": { "status": 200, "body": { "session_token": "synthetic-agent-session", "user_id": "fixture-agent", "display_name": "Fixture Agent", "role": "agent" } }
+    },
+    "expiredSession": {
+      "response": { "status": 401, "body": { "detail": "Invalid or expired session" } }
+    }
+  },
+  "upload": {
+    "field": "file",
+    "method": "POST",
+    "path": "/api/v1/documents/upload",
+    "success": { "status": 200, "body": { "document_id": "fixture-document", "filename": "support.txt", "status": "indexed", "chunk_count": 1 } },
+    "unauthenticated": { "status": 401, "body": { "detail": "Invalid or expired session" } },
+    "agentDenied": { "status": 403, "body": { "detail": "Admin role required" } }
+  },
+  "chatRequest": {
+    "method": "POST",
+    "path": "/api/v1/chat",
+    "headers": { "authorization": "Bearer synthetic-agent-session", "content-type": "application/json" },
+    "body": { "query": "fixture question", "session_id": "synthetic-agent-session", "conversation_id": null }
+  }
+}

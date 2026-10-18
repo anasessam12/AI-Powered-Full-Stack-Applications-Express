@@ -1,0 +1,39 @@
+{
+  "notice": "Deterministic synthetic frames for client-side parser evaluation. No provider credentials or real user content.",
+  "success": {
+    "contentType": "text/event-stream; charset=utf-8",
+    "frames": [
+      { "event": "token", "data": { "token": "أهلًا" } },
+      { "event": "citations", "data": { "citations": [{ "source_name": "support-fixture.md", "page_number": null, "chunk_index": 0 }] } },
+      { "event": "done", "data": { "message_id": "fixture-message", "provider": "fixture" } }
+    ],
+    "expected": { "text": "أهلًا", "citationCount": 1, "terminalEvent": "done", "success": true }
+  },
+  "providerError": {
+    "contentType": "text/event-stream; charset=utf-8",
+    "frames": [
+      { "event": "token", "data": { "token": "Partial" } },
+      { "event": "error", "data": { "message": "Synthetic provider failure" } }
+    ],
+    "expected": { "text": "Partial", "terminalEvent": "error", "success": false, "showError": true, "clearLoading": true }
+  },
+  "arbitraryNetworkChunkBoundaries": {
+    "construction": "Serialize success frames exactly as UTF-8 SSE (event: <name>\\ndata: <JSON>\\n\\n), concatenate, then feed Uint8Array chunks to the parser.",
+    "splitCases": [
+      "Split between CR/LF or newline delimiters so one frame arrives over multiple reads.",
+      "Split inside the JSON data line.",
+      "Split the multibyte UTF-8 encoding of the first Arabic character in the token across two byte chunks before TextDecoder decoding.",
+      "Join the token, citations, and done frames into one network chunk."
+    ],
+    "expected": "Same decoded text, one citation, and one done event as success; never drop or duplicate a frame."
+  },
+  "prematureEof": {
+    "frames": [{ "event": "token", "data": { "token": "Partial" } }],
+    "noTerminalEvent": true,
+    "expected": "Must not mark successful completion when the stream closes without done; stop loading and expose the documented incomplete-stream error."
+  },
+  "httpFailures": [
+    { "status": 401, "expected": "Expire session or request login; never remain loading." },
+    { "status": 503, "body": { "detail": "Synthetic backend unavailable" }, "expected": "Show a recoverable error; never treat a non-2xx response as an SSE success." }
+  ]
+}

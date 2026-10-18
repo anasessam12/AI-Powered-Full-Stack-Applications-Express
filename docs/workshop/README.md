@@ -12,6 +12,7 @@
 4. ارجع إلى [قواعد الأدوات والـstack](04-stack-and-tools.md) عند تجهيز البيئة أو مراجعة التنفيذ.
 5. انسخ [القوالب والـprompts](05-templates-and-prompts.md) لكل feature وrun.
 6. اتبع [خطة التحضير والتنفيذ](../superpowers/plans/2026-10-18-agentic-workshop.md) بالترتيب.
+7. راجع [checklist وfixtures المشتركة](evaluation-checklist.md) وملفات [تجارب 01–04](runs/) قبل تنفيذ أول run.
 
 ## القرار المقترح
 

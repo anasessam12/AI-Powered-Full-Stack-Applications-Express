@@ -6,3 +6,4 @@ data/*.db-wal
 data/uploads/
 npm-debug.log*
 .DS_Store
+.superpowers/
