@@ -4,8 +4,9 @@ import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
 import { UsersModule } from './users/users.module';
+import { DocumentsModule } from './documents/documents.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, AuthModule, UsersModule, HealthModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, AuthModule, UsersModule, DocumentsModule, HealthModule],
 })
 export class AppModule {}

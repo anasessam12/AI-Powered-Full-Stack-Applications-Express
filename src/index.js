@@ -5,9 +5,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
+const { PDFParse } = require('pdf-parse');
 const { db, closeDatabase, transaction } = require('./db');
-const { chunkText, extractPages, sanitize } = require('./text');
+const { chunkText, sanitize } = require('./text');
 const { search, buildPrompt } = require('./rag');
 const { streamCompletion } = require('./openrouter');
 
@@ -114,9 +114,14 @@ app.post('/api/v1/documents/upload', currentUser, requireAdmin, (req, res, next)
   let pageTexts;
   try {
     if (extension === 'pdf') {
-      const parsed = await pdfParse(file.buffer);
-      pageTexts = extractPages(parsed.text);
-      if (!pageTexts.length && parsed.text.trim()) pageTexts = [parsed.text.trim()];
+      const parser = new PDFParse({ data: new Uint8Array(file.buffer), isEvalSupported: false });
+      try {
+        const parsed = await parser.getText();
+        pageTexts = parsed.pages.map((page) => page.text.trim()).filter(Boolean);
+        if (!pageTexts.length && parsed.text.trim()) pageTexts = [parsed.text.trim()];
+      } finally {
+        await parser.destroy();
+      }
     } else {
       pageTexts = [file.buffer.toString('utf8').replace(/\r\n/g, '\n').trim()];
     }

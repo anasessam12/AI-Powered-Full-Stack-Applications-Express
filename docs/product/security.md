@@ -17,3 +17,11 @@
 - CORS allows the configured `WEB_ORIGIN`, credentials, and only the API's supported headers. A production reverse proxy must terminate TLS; the application sets Secure cookies when `NODE_ENV=production`.
 
 The login limiter is in-process in this single-instance release. A multi-instance deployment must replace it with a shared rate-limit store before scaling API replicas.
+
+## Uploaded documents
+
+- Multipart uploads are buffered only up to the hard 20 MiB limit. `DOCUMENT_MAX_BYTES` can lower the cap for a deployment; values above 20 MiB are rejected at startup.
+- The filename is validated as a single basename and never forms a storage path. Storage keys are random UUIDs with a validated extension; the local adapter checks every resolved key stays below its configured root and creates files with owner-only permissions.
+- The server checks extension, declared MIME type, PDF signature, and strict UTF-8 decoding for text formats. The PDF parser disables JavaScript evaluation; malformed or empty extraction is recorded as failed and not indexed.
+- Stored text is untrusted source material. The API stores chunk/page/section metadata for downstream retrieval, but document text must never be treated as system instructions.
+- Configure `DOCUMENT_STORAGE_ROOT` on a persistent volume and include it in the application's backup/retention plan. Do not expose that directory from the web server.

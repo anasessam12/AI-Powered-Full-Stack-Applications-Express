@@ -8,7 +8,7 @@ export enum DocumentStatus {
 
 @Entity({ name: 'documents' })
 @Index('documents_status_idx', ['status'])
-@Index('documents_checksum_sha256_idx', ['checksumSha256'])
+@Index('documents_checksum_sha256_uq', ['checksumSha256'], { unique: true })
 export class Document {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

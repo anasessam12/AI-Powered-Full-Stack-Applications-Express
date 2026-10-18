@@ -15,7 +15,7 @@
 6. Create the initial Admin in an interactive terminal: `npm run admin:create`. Enter a unique username and a strong password when prompted; the password is hidden and is never seeded or logged.
 7. Open `http://localhost:4200`. The health endpoint is `http://localhost:3000/api/v1/health` and returns 503 if PostgreSQL is unavailable.
 
-The application currently has the initial shell and database foundation; authentication and product workflows are added in subsequent implementation tasks. Do not interpret the development database credentials as product user credentials or production authentication.
+The API currently supports username/password sessions, Admin user management, and document ingestion. Conversation history and grounded chat are added in the next implementation tasks. Do not interpret the development database credentials as product user credentials or production authentication.
 
 ## Common commands
 
@@ -24,7 +24,7 @@ The application currently has the initial shell and database foundation; authent
 - `npm run db:migrate`: apply pending TypeORM migrations.
 - `npm run db:revert`: revert the last migration; use only when its effects are understood.
 - `npm run admin:create`: securely prompt for and create the first Admin once.
-- `npm test`: run Nx project tests. PostgreSQL schema integration tests also require `TEST_DATABASE_URL` pointing to a dedicated database ending in `_test`; run them with `npx nx test api --runInBand`.
+- `npm test`: run all Nx project tests. The script enables Node's VM modules for Jest because the maintained PDF parser uses the ESM PDF.js worker. `npm run test:api` runs the API suite. PostgreSQL integration tests also require `TEST_DATABASE_URL` pointing to a dedicated database ending in `_test`.
 - `npm test`: run Nx project tests.
 - `npm run test:legacy`: run the existing Express reference tests.
 - `npm run lint`: run Nx lint targets.

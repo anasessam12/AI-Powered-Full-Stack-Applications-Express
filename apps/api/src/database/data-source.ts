@@ -9,6 +9,7 @@ import { Message } from './entities/message.entity';
 import { Session } from './entities/session.entity';
 import { User } from './entities/user.entity';
 import { InitialProductSchema1700000000000 } from './migrations/1700000000000-InitialProductSchema';
+import { UniqueDocumentChecksum1700000001000 } from './migrations/1700000001000-UniqueDocumentChecksum';
 
 const databaseUrl = process.env.DATABASE_URL;
 
@@ -20,7 +21,7 @@ const AppDataSource = new DataSource({
   type: 'postgres',
   url: databaseUrl,
   entities: [User, Session, Document, DocumentChunk, Conversation, Message, Citation],
-  migrations: [InitialProductSchema1700000000000],
+  migrations: [InitialProductSchema1700000000000, UniqueDocumentChecksum1700000001000],
   migrationsTableName: 'typeorm_migrations',
   synchronize: false,
   migrationsRun: false,
