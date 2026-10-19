@@ -10,13 +10,10 @@ async function signIn(page: Page, account: typeof admin): Promise<void> {
   await page.getByRole('button', { name: /sign in/i }).click();
 }
 
-test('Admin provisions an Agent and knowledge; Agent gets grounded, persisted answers and restricted access', async ({ page }) => {
+test('seeded Admin and Agent use knowledge; Agent gets grounded, persisted answers and restricted access', async ({ page }) => {
   await signIn(page, admin);
   await page.goto('/admin/users');
-  await page.getByLabel('Username', { exact: true }).fill(agent.username);
-  await page.getByLabel('Temporary password').fill(agent.password);
-  await page.getByRole('button', { name: 'Create account' }).click();
-  await expect(page.getByRole('status')).toContainText('created');
+  await expect(page.getByText(agent.username)).toBeVisible();
 
   await page.goto('/admin/documents');
   await page.locator('#document-file').setInputFiles({ name: 'return-policy.txt', mimeType: 'text/plain', buffer: Buffer.from('Returns are accepted within thirty days of purchase.') });
@@ -32,6 +29,9 @@ test('Admin provisions an Agent and knowledge; Agent gets grounded, persisted an
   await page.getByRole('button', { name: /send question/i }).click();
   await expect(page.getByText('The return window is thirty days.')).toBeVisible();
   await expect(page.getByText('return-policy.txt')).toBeVisible();
+  await page.getByLabel(/ask a question/i).fill('What security guidance is in the account security note?');
+  await page.getByRole('button', { name: /send question/i }).click();
+  await expect(page.getByText('account-security.md')).toBeVisible();
   await page.reload();
   await expect(page.getByText('The return window is thirty days.')).toBeVisible();
 
