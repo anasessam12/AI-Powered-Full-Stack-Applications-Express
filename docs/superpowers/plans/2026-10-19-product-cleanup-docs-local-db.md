@@ -117,11 +117,11 @@
 
 **Interfaces:** Product overview links all phase and feature pages. Each feature page states user/role, journey/API contract, persistence/source-of-truth, failure behavior, security boundary, and owning tests. Database ERD tables are `users`, `sessions`, `documents`, `document_chunks`, `conversations`, `messages`, and `citations`.
 
-- [ ] **Step 1: Write the product and feature index.** Explain the single-organization purpose, Admin/Agent journeys, modular monolith, current local startup, and links to all feature/spec/database pages.
-- [ ] **Step 2: Write the feature pages from implementation evidence.** Use current controllers, DTOs, Angular routes, services, and tests; document actual roles, cookie/CSRF behavior, document flow, search abstention, SSE events, ownership, and source retrieval without proposing unimplemented capabilities.
-- [ ] **Step 3: Write the Mermaid ERD and relationship table.** Show User 1:N Session/Document/Conversation/Message; Document 1:N Chunk; Conversation 1:N Message; Message 1:N Citation; nullable Citation references to Document/Chunk. Record actual composite ownership FK, cascade/restrict/set-null behavior, and indexes from migrations.
-- [ ] **Step 4: Verify documentation links and schema claims.** Check every link resolves; compare ERD/FK/index claims with `apps/api/src/database/migrations/*.ts` and `apps/api/test/database/schema.integration.spec.ts`.
-- [ ] **Step 5: Commit.** `docs: document product features and database relationships`.
+- [x] **Step 1: Write the product and feature index.** Documented the single-organization product, Admin/Agent journeys, architecture, startup pointer, and phase/feature/database links.
+- [x] **Step 2: Write the feature pages from implementation evidence.** Added eight feature guides using current controllers, services, contracts, storage, retrieval, and UI behavior.
+- [x] **Step 3: Write the Mermaid ERD and relationship table.** Recorded the composite ownership FK, deletion behavior, nullable citation pointers and snapshots, and actual indexes.
+- [x] **Step 4: Verify documentation links and schema claims.** All relative links resolve. ERD, FKs, deletion behavior, and indexes were checked against the three migrations and entity definitions.
+- [x] **Step 5: Commit.** `docs: document product features and database relationships`.
 
 ### Task 6: Add package workflows and align README, CI, and local setup docs
 
