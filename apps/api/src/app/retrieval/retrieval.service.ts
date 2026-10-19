@@ -24,6 +24,11 @@ interface RetrievalRow {
 
 const MAX_RESULTS = 5;
 const MAX_QUERY_CHARACTERS = 500;
+const QUESTION_STOP_WORDS = new Set([
+  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'can', 'could', 'do', 'does', 'for', 'from',
+  'have', 'how', 'if', 'in', 'is', 'it', 'may', 'of', 'on', 'or', 'should', 'the', 'to', 'what',
+  'when', 'where', 'which', 'who', 'why', 'within', 'with',
+]);
 
 @Injectable()
 export class RetrievalService {
@@ -35,10 +40,12 @@ export class RetrievalService {
     if (normalized.length > MAX_QUERY_CHARACTERS) {
       throw new BadRequestException(`Search query must be ${MAX_QUERY_CHARACTERS} characters or fewer.`);
     }
+    const terms = (normalized.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [])
+      .filter((term) => !QUESTION_STOP_WORDS.has(term));
     const boundedLimit = Math.min(MAX_RESULTS, Math.max(1, Math.floor(limit)));
     const rows = (await this.dataSource.query(
       `WITH search_query AS (
-         SELECT websearch_to_tsquery('simple', $1) AS value
+         SELECT replace(plainto_tsquery('simple', $2)::text, ' & ', ' | ')::tsquery AS value
        )
        SELECT
          chunk.id AS "chunkId",
@@ -60,8 +67,8 @@ export class RetrievalService {
        WHERE document.status = 'INDEXED'
          AND document.deleted_at IS NULL
        ORDER BY "score" DESC, chunk.id ASC
-       LIMIT $2`,
-      [normalized, boundedLimit],
+       LIMIT $3`,
+      [normalized, terms.join(' '), boundedLimit],
     )) as RetrievalRow[];
 
     return rows.map((row) => ({ ...row, score: Number(row.score) }));

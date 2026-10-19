@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../api/src/app/app.module';
 import { LLM_PROVIDER } from '../api/src/llm/llm-provider';
-import { AcceptanceLlmProvider } from './global-setup';
+import { AcceptanceLlmProvider } from './acceptance-llm-provider';
 import { resolveDatabaseTarget } from '../api/src/database/database-target';
 
 async function bootstrap(): Promise<void> {

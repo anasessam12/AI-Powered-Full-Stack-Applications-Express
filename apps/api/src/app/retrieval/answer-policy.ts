@@ -17,7 +17,7 @@ export interface AnswerPreparation {
   citations: AnswerCitation[];
 }
 
-const DEFAULT_THRESHOLD = 0.02;
+const DEFAULT_THRESHOLD = 0.25;
 const DEFAULT_CONTEXT_LIMIT = 10_000;
 const MAX_CONTEXT_CHUNKS = 5;
 const SYSTEM_INSTRUCTION = [
