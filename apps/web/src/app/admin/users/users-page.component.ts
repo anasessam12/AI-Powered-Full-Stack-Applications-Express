@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -11,13 +11,35 @@ export class UsersPageComponent implements OnInit {
   users: UserContract[] = []; username = ''; password = ''; role: UserRoleContract = 'AGENT'; loading = false; saving = false; message = ''; error = '';
   private readonly api = inject(AdminWorkspaceApi);
   private readonly auth = inject(AuthSessionService);
+  private readonly changeDetector = inject(ChangeDetectorRef);
   get currentUserId(): string { return this.auth.current()?.user.id ?? ''; }
   ngOnInit(): void { this.load(); }
-  load(): void { this.loading = true; this.api.listUsers().pipe(finalize(() => this.loading = false)).subscribe({ next: (users) => this.users = users, error: () => this.error = 'Team accounts could not be loaded. Refresh to try again.' }); }
-  create(): void { if (!this.username.trim() || this.password.length < 12 || this.saving) { this.error = 'Enter a username and a password of at least 12 characters.'; return; } this.saving = true; this.error = ''; this.message = ''; const input: CreateUserRequestContract = { username: this.username.trim(), password: this.password, role: this.role }; this.api.createUser(input).subscribe({ next: (user) => { this.message = `Account for ${user.username} created.`; this.username = ''; this.password = ''; this.load(); }, error: (err) => this.error = err.status === 409 ? 'That username is already in use.' : 'The account could not be created. Check the details and try again.', complete: () => this.saving = false }); }
+  load(): void {
+    this.loading = true;
+    this.api.listUsers().pipe(finalize(() => { this.loading = false; this.changeDetector.markForCheck(); })).subscribe({
+      next: (users) => { this.users = users; this.changeDetector.markForCheck(); },
+      error: () => { this.error = 'Team accounts could not be loaded. Refresh to try again.'; this.changeDetector.markForCheck(); },
+    });
+  }
+  create(): void {
+    if (!this.username.trim() || this.password.length < 12 || this.saving) { this.error = 'Enter a username and a password of at least 12 characters.'; return; }
+    this.saving = true; this.error = ''; this.message = '';
+    const input: CreateUserRequestContract = { username: this.username.trim(), password: this.password, role: this.role };
+    this.api.createUser(input).subscribe({
+      next: (user) => { this.message = `Account for ${user.username} created.`; this.username = ''; this.password = ''; this.load(); this.changeDetector.markForCheck(); },
+      error: (err) => { this.error = err.status === 409 ? 'That username is already in use.' : 'The account could not be created. Check the details and try again.'; this.changeDetector.markForCheck(); },
+      complete: () => { this.saving = false; this.changeDetector.markForCheck(); },
+    });
+  }
   setRole(user: UserContract, event: Event): void { const role = (event.target as HTMLSelectElement).value as UserRoleContract; if (role === user.role) return; this.change(user, { role }, `Access for ${user.username} updated.`); }
   toggle(user: UserContract): void { this.change(user, { isActive: !user.isActive }, `${user.username} ${user.isActive ? 'deactivated' : 'reactivated'}.`); }
-  private change(user: UserContract, input: {role?: UserRoleContract;isActive?:boolean}, message: string): void { this.saving = true; this.error = ''; this.api.updateUser(user.id, input).pipe(finalize(() => this.saving = false)).subscribe({ next: (updated) => { this.users = this.users.map((item) => item.id === updated.id ? updated : item); this.message = message; }, error: () => this.error = 'The account could not be updated. Refresh and try again.' }); }
+  private change(user: UserContract, input: {role?: UserRoleContract;isActive?:boolean}, message: string): void {
+    this.saving = true; this.error = '';
+    this.api.updateUser(user.id, input).pipe(finalize(() => { this.saving = false; this.changeDetector.markForCheck(); })).subscribe({
+      next: (updated) => { this.users = this.users.map((item) => item.id === updated.id ? updated : item); this.message = message; this.changeDetector.markForCheck(); },
+      error: () => { this.error = 'The account could not be updated. Refresh and try again.'; this.changeDetector.markForCheck(); },
+    });
+  }
 }
 
 

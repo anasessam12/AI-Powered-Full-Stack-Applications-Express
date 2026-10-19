@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -13,6 +13,7 @@ export class LoginPageComponent {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthSessionService);
   private readonly router = inject(Router);
+  private readonly changeDetector = inject(ChangeDetectorRef);
   readonly form = this.fb.group({ username: ['', Validators.required], password: ['', Validators.required] });
   submitted = false; busy = false; error = '';
 
@@ -21,7 +22,10 @@ export class LoginPageComponent {
     if (this.form.invalid || this.busy) { this.form.markAllAsTouched(); return; }
     const username = this.form.controls.username.value?.trim() ?? ''; const password = this.form.controls.password.value ?? '';
     this.busy = true;
-    this.auth.login({ username, password }).pipe(finalize(() => this.busy = false)).subscribe({ next: (session) => void this.router.navigateByUrl(session.user.role === 'ADMIN' ? '/admin/documents' : '/chat'), error: (error) => this.error = error.status === 401 ? 'Check your username and password, then try again.' : 'We could not reach the workspace. Check your connection and try again.' });
+    this.auth.login({ username, password }).pipe(finalize(() => { this.busy = false; this.changeDetector.markForCheck(); })).subscribe({
+      next: (session) => void this.router.navigateByUrl(session.user.role === 'ADMIN' ? '/admin/documents' : '/chat'),
+      error: (error) => { this.error = error.status === 401 ? 'Check your username and password, then try again.' : 'We could not reach the workspace. Check your connection and try again.'; this.changeDetector.markForCheck(); },
+    });
   }
 }
 
