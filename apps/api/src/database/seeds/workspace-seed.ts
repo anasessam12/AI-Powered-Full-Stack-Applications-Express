@@ -2,13 +2,13 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { DataSource, EntityManager } from 'typeorm';
-import { chunkDocumentText } from '../../app/retrieval/chunking/document-chunker';
-import { Document, DocumentStatus } from '../entities/document.entity';
+import { Document } from '../entities/document.entity';
 import { DocumentChunk } from '../entities/document-chunk.entity';
 import { User, UserRole } from '../entities/user.entity';
 import { resolveDatabaseTarget, DatabaseMode } from '../database-target';
 import { LocalDocumentStorage } from '../../storage/local-document-storage';
 import { hashPassword } from '../../security/password-hasher';
+import { DocumentsService } from '../../app/documents/documents.service';
 
 export const WORKSPACE_SEED_ACCOUNTS = {
   local: [
@@ -62,34 +62,33 @@ async function seedAccounts(manager: EntityManager, mode: DatabaseMode): Promise
   return { admin, usersCreated };
 }
 
-async function seedKnowledge(manager: EntityManager, owner: User, storage: LocalDocumentStorage): Promise<boolean> {
-  const content = await readFile(resolve(__dirname, '../../../test/fixtures/seed/account-security.md'));
-  const checksumSha256 = createHash('sha256').update(content).digest('hex');
-  const documents = manager.getRepository(Document);
-  if (await documents.findOneBy({ checksumSha256 })) return false;
+const KNOWLEDGE_FIXTURES = [
+  { fileName: 'account-security.md', mimeType: 'text/markdown' },
+  { fileName: 'returns-policy.txt', mimeType: 'text/plain' },
+  { fileName: 'exchange-policy.md', mimeType: 'text/markdown' },
+  { fileName: 'billing-policy.pdf', mimeType: 'application/pdf' },
+] as const;
 
-  const storageKey = await storage.put(content, '.md');
-  try {
-    const document = await documents.save(documents.create({
-      ownerUserId: owner.id,
-      displayName: 'account-security.md',
-      storageKey,
-      mimeType: 'text/markdown',
-      byteSize: String(content.length),
-      checksumSha256,
-      status: DocumentStatus.INDEXED,
-      errorCode: null,
-      deletedAt: null,
-    }));
-    const chunks = chunkDocumentText(content.toString('utf8'));
-    await manager.getRepository(DocumentChunk).save(
-      chunks.map((chunk) => manager.getRepository(DocumentChunk).create({ documentId: document.id, ...chunk })),
-    );
-    return true;
-  } catch (error) {
-    await storage.delete(storageKey);
-    throw error;
+async function seedKnowledge(manager: EntityManager, owner: User, storage: LocalDocumentStorage): Promise<number> {
+  const documents = manager.getRepository(Document);
+  const ingestion = new DocumentsService(documents, manager.getRepository(DocumentChunk), storage);
+  let created = 0;
+
+  for (const fixture of KNOWLEDGE_FIXTURES) {
+    const content = await readFile(resolve(__dirname, '../../../test/fixtures/seed', fixture.fileName));
+    const checksumSha256 = createHash('sha256').update(content).digest('hex');
+    if (await documents.findOneBy({ checksumSha256 })) continue;
+
+    await ingestion.create({
+      originalname: fixture.fileName,
+      mimetype: fixture.mimeType,
+      size: content.length,
+      buffer: content,
+    }, owner);
+    created += 1;
   }
+
+  return created;
 }
 
 export async function seedWorkspace(
@@ -102,7 +101,7 @@ export async function seedWorkspace(
   let result: SeedResult = { usersCreated: 0, documentsCreated: 0 };
   await dataSource.transaction(async (manager) => {
     const { admin, usersCreated } = await seedAccounts(manager, mode);
-    const documentsCreated = await seedKnowledge(manager, admin, storage) ? 1 : 0;
+    const documentsCreated = await seedKnowledge(manager, admin, storage);
     result = { usersCreated, documentsCreated };
   });
   return result;
