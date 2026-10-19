@@ -2,13 +2,13 @@
 
 ## Configuration and runtime
 
-Copy `.env.example` to an ignored local `.env` for development. Set `DATABASE_URL`, `WEB_ORIGIN`, `API_PORT`, `DOCUMENT_STORAGE_ROOT`, `DOCUMENT_MAX_BYTES`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and retrieval thresholds explicitly in a deployment environment. Keep provider credentials server-side and out of browser bundles, logs, screenshots, and source control. The template database password and CI secrets are local/test-only values.
+Run `npm run db:setup` for a first local install; it creates `.env` only if absent and never drops the database or Compose volume. Set `DATABASE_URL`, `WEB_ORIGIN`, `API_PORT`, `DOCUMENT_STORAGE_ROOT`, `DOCUMENT_MAX_BYTES`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and retrieval thresholds explicitly in a deployment environment. Keep provider credentials server-side and out of browser bundles, logs, screenshots, and source control. Template database password and fixed seed users are local/test-only values; do not carry them into deployment.
 
 Run `npm run db:migrate` as a controlled release step before serving traffic. Start the API and Angular static build behind a TLS-terminating reverse proxy that forwards `/api` to NestJS and serves the SPA. Configure the exact allowed web origin, secure cookie behavior (`NODE_ENV=production`), request/body limits, health probes, and graceful shutdown. The current repository documents local and CI operation; it does not include a deployment-specific container, secret manager, HA database, or cloud storage integration.
 
 ## Bootstrap and access
 
-Use `npm run admin:create` once after migrations from an interactive trusted terminal. The command hides the password, validates input, serializes concurrent bootstrap attempts, and refuses to create another initial Admin. Create later users through the Admin UI. There are no seeded demo credentials. Treat test credentials as disposable and rotate any real account credentials through the organization’s approved process.
+Local development seeds `workspace.admin` and `workspace.agent`, plus a fictional support source. The seed is loopback-only, refuses production, hashes passwords with Argon2id, and preserves existing passwords. These fixed credentials must never be deployed. For a fresh production installation, use `npm run admin:create` once after migrations from an interactive trusted terminal; it hides the password, serializes concurrent bootstrap attempts, and refuses a second initial Admin. Create later users through the Admin UI. Treat test credentials as disposable and rotate any real account credentials through the organization's approved process.
 
 ## Documents and backups
 
@@ -20,4 +20,4 @@ Use `/api/v1/health` for readiness; it reports database availability. Capture pr
 
 ## Safe test database
 
-Both PostgreSQL integration tests and Playwright require a disposable database name ending `_test`. Playwright truncates the application tables and installs a fixed test Admin account. Never set `TEST_DATABASE_URL` to a shared or production database.
+Both PostgreSQL integration tests and Playwright require a loopback database name ending `_test`. Playwright truncates only application tables in that database and seeds fixed test Admin/Agent accounts and knowledge. Never set `TEST_DATABASE_URL` to a shared, developer-local, or production database.

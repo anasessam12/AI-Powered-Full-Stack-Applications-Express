@@ -131,14 +131,14 @@
 
 **Interfaces:** Add `db:up`, `db:stop`, `db:status`, `db:create`, `db:create:test`, `db:migrate`, `db:seed:local`, `db:seed:test`, `db:setup`, `dev`, `start:api`, and `test:e2e` scripts. `db:setup` runs non-destructive local Compose startup → exact-case DB creation → migrations → local seed. The setup script copies `.env.example` only when `.env` is absent and uses Node child-process invocation so it works in PowerShell and CI shells.
 
-- [ ] **Step 1: Write orchestration-script tests.** Add `setup_local_does_not_overwrite_existing_env`, `setup_local_copies_template_if_missing`, and `setup_local_stops_on_database_or_migration_failure`; inject a child-process runner to assert command order without requiring Docker in unit tests.
-- [ ] **Step 2: Run those tests and verify failure.** Expected: `setup-local.cjs` is absent and orchestration behavior is not implemented.
-- [ ] **Step 3: Implement cross-platform local setup orchestration.** Ensure `.env.example` is copied only if `.env` is absent; invoke `docker compose up -d postgres`, `db:create`, `db:migrate`, and `db:seed:local` sequentially; stop immediately on the first non-zero exit and never call `down -v`, truncate, or drop.
-- [ ] **Step 4: Add package scripts and environment values.** Set `.env.example` to maintenance `POSTGRES_DB=postgres`, `DATABASE_URL=postgresql://support_app:local_dev_only_change_me@localhost:5433/teamWorkspace`, and `TEST_DATABASE_URL=postgresql://support_app:local_dev_only_change_me@localhost:5433/teamWorkspace_test`. Add package scripts for lifecycle, migration, seeds, app serving, and checks; regenerate the lockfile only if dependencies changed.
-- [ ] **Step 5: Update top-level and operational instructions.** Make README and development guide use `Copy-Item .env.example .env`, `npm ci`, `npm run db:setup`, and `npm start`; document only the local/test credentials, test database guard, port 5433, persistent volume, and non-destructive setup.
-- [ ] **Step 6: Align CI to the guarded test database.** Start PostgreSQL with maintenance DB `postgres`; set `TEST_DATABASE_URL` to `teamWorkspace_test`; run `db:create:test` before migrations/tests. Keep deterministic provider and Chromium E2E setup; do not seed development credentials in CI.
-- [ ] **Step 7: Verify package and docs.** Run setup script unit tests, `npm run db:status`, `npm run lint`, `npm test`, Playwright `--list`, and `git diff --check`; expected: scripts resolve cross-platform and all active run docs use one setup sequence.
-- [ ] **Step 8: Commit.** `docs: add local database and product run workflows`.
+- [x] **Step 1: Write orchestration-script tests.** Added no-overwrite, copy-if-missing, and stop-on-create/migration/seed-failure tests with an injected runner.
+- [x] **Step 2: Run those tests and verify failure.** The first run failed because the setup module was missing.
+- [x] **Step 3: Implement cross-platform local setup orchestration.** Copies `.env.example` only when absent; runs Compose, create, migrate, and seed sequentially and exits on the first failure.
+- [x] **Step 4: Add package scripts and environment values.** Added lifecycle/create/migrate/seed/setup/API scripts and exact local/test URLs. No dependencies changed, so lockfile was not modified.
+- [x] **Step 5: Update top-level and operational instructions.** README/development/testing/operations describe setup, fixed local/test users, pgAdmin host/port, persistent volume, and database protections.
+- [x] **Step 6: Align CI to the guarded test database.** CI now uses maintenance DB `postgres`, creates `teamWorkspace_test` before migrations, and keeps deterministic provider/Chromium flow.
+- [x] **Step 7: Verify package and docs.** API tests, lint, build, Playwright `--list`, JSON parsing, documentation links, and `git diff --check` pass. `db:status` remains unavailable because Docker is not installed in this environment.
+- [x] **Step 8: Commit.** `docs: add local database and product run workflows`.
 
 ### Task 7: Create the requested local database and run integrated verification
 

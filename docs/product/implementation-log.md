@@ -104,3 +104,7 @@ This log records implementation checkpoints and verification evidence as the pro
 # Implementation log
 
 Entries below preserve the results observed at each historical phase. The Express/SQLite runtime and its smoke tests have since been retired; see [the archive note](../history/express-demo.md). Past command names describe checks run at that time and are not current run instructions.
+
+## Local database workflow follow-up — 2026-10-19
+
+Added loopback-only creation for the exact `teamWorkspace` name and `_test` databases, idempotent local/test Admin and Agent fixtures, indexed sample knowledge, and cross-platform `db:*` setup scripts. Unit tests, lint, build, Playwright discovery, and documentation link checks pass. Local PostgreSQL creation and database-backed E2E remain unverified because this environment has no Docker executable and nothing is listening on `localhost:5433`; no database has been created on this machine by this follow-up.

@@ -25,4 +25,4 @@ The implementation is described phase-by-phase in [phase specs](../specs/phases/
 
 ## Data and local startup
 
-The database schema is migration-managed; `synchronize` is disabled. See [database relationships](database.md). The intended local workflow is `npm run db:setup`, then `npm start`; scripts and actual machine setup are being completed in the approved cleanup plan. Local/test accounts are disposable and must never be used in production.
+The database schema is migration-managed; `synchronize` is disabled. See [database relationships](database.md). For local startup, run `npm run db:setup`, then `npm start`; setup preserves the named PostgreSQL volume and does not drop existing databases. Local/test accounts are disposable and must never be used in production.

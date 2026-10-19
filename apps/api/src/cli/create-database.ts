@@ -10,7 +10,7 @@ async function connectMaintenanceClient(connectionUrl: string): Promise<Client> 
   maintenanceUrl.pathname = '/postgres';
   const deadline = Date.now() + RETRY_WINDOW_MS;
   while (Date.now() < deadline) {
-    const client = new Client({ connectionString: maintenanceUrl.toString() });
+    const client = new Client({ connectionString: maintenanceUrl.toString(), connectionTimeoutMillis: 3000 });
     try {
       await client.connect();
       return client;

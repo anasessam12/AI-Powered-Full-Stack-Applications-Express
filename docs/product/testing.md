@@ -4,12 +4,15 @@
 
 - `npm test`: run Angular and API unit/integration suites.
 - `npm run test:api`: run only the API suites.
+- `npm run db:create:test`: safely create a loopback `_test` database if absent.
+- `npm run db:migrate`: apply schema to `DATABASE_URL` (point it to the test DB when running integration tests).
+- `npm run db:seed:test`: add fixed test-only Admin/Agent accounts and indexed knowledge without duplicates.
 - `npm run test:e2e`: run browser acceptance flows against a dedicated PostgreSQL database and deterministic fake provider.
 - `npx nx run-many -t lint test build`: run the full Nx quality gate. `npm test` and `npm run test:api` wrap the Jest command to enable Node VM modules for the PDF.js worker.
 
 PostgreSQL integration tests require `TEST_DATABASE_URL` to point to a dedicated disposable database whose name ends in `_test`. They apply TypeORM migrations and truncate only the known application tables. Do not point this variable at a developer, shared, staging, or production database. Tests do not run schema synchronization.
 
-The Playwright global setup applies migrations, clears application tables, and creates `support.e2e.admin` with a fixed test-only password. The E2E API replaces OpenRouter with a deterministic provider; the sentinel question `__provider_failure__` simulates an upstream error. Playwright runs one worker because scenarios share this disposable database. CI provisions PostgreSQL and Chromium. Locally install Chromium once with `npx playwright install chromium`.
+The Playwright global setup applies migrations, clears application tables only after confirming a loopback `_test` target, and seeds `support.e2e.admin` / `E2e-admin-password-91!` plus `support.e2e.agent` / `E2e-agent-password-121!` and a fixture document. These credentials are test-only. The E2E API replaces OpenRouter with a deterministic provider; `__provider_failure__` simulates an upstream error. Playwright runs one worker because scenarios share this disposable database. CI provisions PostgreSQL and Chromium. Locally install Chromium once with `npx playwright install chromium`.
 
 ## Test boundaries
 

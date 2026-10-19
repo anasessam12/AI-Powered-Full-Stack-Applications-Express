@@ -86,19 +86,20 @@ describe('seedWorkspace idempotency', () => {
       await expect(seedWorkspace(memory.source, 'local', env)).resolves.toEqual({ usersCreated: 2, documentsCreated: 1 });
       const users = memory.userRepository.rows;
       const admin = users.find((user) => user.username === 'workspace.admin');
+      if (!admin) throw new Error('Seeded Admin was not stored.');
       expect(users).toHaveLength(2);
-      expect(admin?.passwordHash).toMatch(/^\$argon2id\$/);
-      expect(await verifyPassword(admin!.passwordHash, WORKSPACE_SEED_ACCOUNTS.local[0].password)).toBe(true);
+      expect(admin.passwordHash).toMatch(/^\$argon2id\$/);
+      expect(await verifyPassword(admin.passwordHash, WORKSPACE_SEED_ACCOUNTS.local[0].password)).toBe(true);
       expect(memory.documentRepository.rows[0].status).toBe('INDEXED');
       expect(memory.chunkRepository.rows.some((chunk) => chunk.content.includes('Change a password immediately'))).toBe(true);
 
-      const originalHash = admin!.passwordHash;
-      admin!.passwordHash = '$argon2id$manually-changed-hash';
+      const originalHash = admin.passwordHash;
+      admin.passwordHash = '$argon2id$manually-changed-hash';
       await expect(seedWorkspace(memory.source, 'local', env)).resolves.toEqual({ usersCreated: 0, documentsCreated: 0 });
       expect(users).toHaveLength(2);
       expect(memory.documentRepository.rows).toHaveLength(1);
-      expect(admin!.passwordHash).not.toBe(originalHash);
-      expect(admin!.passwordHash).toBe('$argon2id$manually-changed-hash');
+      expect(admin.passwordHash).not.toBe(originalHash);
+      expect(admin.passwordHash).toBe('$argon2id$manually-changed-hash');
     } finally {
       await rm(root, { recursive: true, force: true });
     }
