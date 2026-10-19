@@ -97,9 +97,9 @@
 
 **Interfaces:** Every phase page uses the same fields: objective, delivered scope, APIs/data/UI touched, acceptance criteria, verification evidence, status/known limits, and links to feature docs/code/tests. Preserve historical results; do not claim PostgreSQL E2E passed locally.
 
-- [ ] **Step 1: Draft all nine phase specifications.** Map original tasks in order: Nx foundation; database/auth; Admin bootstrap/user access; document ingestion; retrieval/provider boundary; durable conversations/streaming API; Angular Admin workflows; Angular Agent chat/history; final acceptance/operations/migration closeout.
-- [ ] **Step 2: Self-check phase coverage.** Compare each page with its original plan task and implementation-log section; every acceptance result and known limitation must have source evidence or be explicitly labeled unverified.
-- [ ] **Step 3: Commit the phase-spec set.** `docs: add specifications for completed product phases`.
+- [x] **Step 1: Draft all nine phase specifications.** Added phase 01–09 pages in original implementation order.
+- [x] **Step 2: Self-check phase coverage.** Each page states objective, delivered scope, boundaries, acceptance, historical verification, limits, and links. Phase 09 explicitly marks local DB/E2E unverified.
+- [x] **Step 3: Commit the phase-spec set.** `docs: add specifications for completed product phases`.
 
 ### Task 5: Add feature docs and database relationship reference
 
