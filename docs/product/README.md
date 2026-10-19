@@ -25,4 +25,4 @@ The implementation is described phase-by-phase in [phase specs](../specs/phases/
 
 ## Data and local startup
 
-The database schema is migration-managed; `synchronize` is disabled. See [database relationships](database.md). For local startup, run `npm run db:setup`, then `npm start`; setup preserves the named PostgreSQL volume and does not drop existing databases. Local/test accounts are disposable and must never be used in production.
+The database schema is migration-managed; `synchronize` is disabled. See [database relationships](database.md). For local startup, configure `DATABASE_ADMIN_URL` for your native PostgreSQL service, then run `npm run db:setup` and `npm start`; setup creates missing roles/database and never drops an existing database. Local/test accounts are disposable and must never be used in production.

@@ -11,7 +11,7 @@ import { SearchVectorTrigger1700000002000 } from '../../src/database/migrations/
 import { LLM_PROVIDER } from '../../src/llm/llm-provider';
 import { FakeLlmProvider } from '../fixtures/fake-llm-provider';
 
-const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+const testDatabaseUrl = process.env.RUN_DATABASE_INTEGRATION === 'true' ? process.env.TEST_DATABASE_URL : undefined;
 const integrationSuite = testDatabaseUrl ? describe : describe.skip;
 
 integrationSuite('grounded chat API', () => {

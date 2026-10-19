@@ -8,7 +8,7 @@ import { UniqueDocumentChecksum1700000001000 } from '../../src/database/migratio
 import { SearchVectorTrigger1700000002000 } from '../../src/database/migrations/1700000002000-SearchVectorTrigger';
 import { RetrievalService } from '../../src/app/retrieval/retrieval.service';
 
-const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+const testDatabaseUrl = process.env.RUN_DATABASE_INTEGRATION === 'true' ? process.env.TEST_DATABASE_URL : undefined;
 const integrationSuite = testDatabaseUrl ? describe : describe.skip;
 
 integrationSuite('PostgreSQL full-text retrieval', () => {

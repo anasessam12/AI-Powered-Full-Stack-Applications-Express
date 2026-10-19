@@ -8,7 +8,7 @@ import { InitialProductSchema1700000000000 } from '../../src/database/migrations
 import { UniqueDocumentChecksum1700000001000 } from '../../src/database/migrations/1700000001000-UniqueDocumentChecksum';
 import { SearchVectorTrigger1700000002000 } from '../../src/database/migrations/1700000002000-SearchVectorTrigger';
 
-const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+const testDatabaseUrl = process.env.RUN_DATABASE_INTEGRATION === 'true' ? process.env.TEST_DATABASE_URL : undefined;
 const integrationSuite = testDatabaseUrl ? describe : describe.skip;
 const adminPassword = 'Task-3-admin-password-468!';
 const agentPassword = 'Task-3-agent-password-247!';

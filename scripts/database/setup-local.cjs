@@ -4,10 +4,20 @@ const { spawnSync } = require('node:child_process');
 const { join } = require('node:path');
 
 function defaultCommandRunner(command, args, rootDir) {
+  if (process.platform === 'win32' && command === 'npm') {
+    if (!process.env.npm_execpath) {
+      return { status: 1, error: new Error('Nested npm commands require running setup through `npm run db:setup`.') };
+    }
+    return spawnSync(process.env.npm_node_execpath || process.execPath, [process.env.npm_execpath, ...args], {
+      cwd: rootDir,
+      stdio: 'inherit',
+      env: process.env,
+    });
+  }
+
   return spawnSync(command, args, {
     cwd: rootDir,
     stdio: 'inherit',
-    shell: process.platform === 'win32',
     env: process.env,
   });
 }
@@ -36,7 +46,6 @@ async function runLocalSetup({ rootDir = process.cwd(), runCommand = defaultComm
   console.log(copied ? 'Created ignored .env from .env.example.' : 'Using existing local .env.');
 
   const commands = [
-    ['docker', ['compose', 'up', '-d', 'postgres']],
     ['npm', ['run', 'db:create']],
     ['npm', ['run', 'db:migrate']],
     ['npm', ['run', 'db:seed:local']],

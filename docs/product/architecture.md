@@ -6,7 +6,7 @@ The product is an Nx integrated monorepo and a single-organization modular monol
 
 - `apps/web`: Angular 22.2.3 customer-support workspace.
 - `apps/api`: NestJS 11.2.7 versioned API; the global prefix is `/api/v1`.
-- PostgreSQL 18.6 is the durable store. TypeORM entities and versioned migrations own schema changes; schema synchronization is disabled.
+- PostgreSQL 18 is the durable store. TypeORM entities and versioned migrations own schema changes; schema synchronization is disabled.
 - `libs/api-contract`: browser-safe API contracts; server persistence entities are not shared with the browser.
 
 The retired Express/SQLite workshop application is preserved as a short historical note under `docs/history/express-demo.md`; it is not part of the product runtime. `npm start` and `npm run dev` target the Angular product.
@@ -18,7 +18,7 @@ The retired Express/SQLite workshop application is preserved as a short historic
 - Angular framework, CLI, compiler and build packages: 22.2.3. This patch line is used because npm audit reported an Angular Router high-severity advisory for versions before 22.2.0.
 - NestJS runtime/testing packages: 11.2.7; Nest schematics: 11.1.0.
 - TypeScript: 6.0.3; `@types/node`: 24.19.2.
-- PostgreSQL Compose image: `postgres:18.6-alpine`. Its persistent volume is mounted at `/var/lib/postgresql`, matching the PostgreSQL 18 image layout.
+- Local development connects to the native PostgreSQL service at `localhost:5432` by default. `DATABASE_ADMIN_URL` provisions a restricted `support_app` role and the exact-case `teamWorkspace` database; it does not change existing roles or drop databases.
 - `package-lock.json` is authoritative for transitive package versions. Direct framework versions are exact in `package.json`.
 
 Compatibility was checked against Nx's Angular matrix and Angular's Node/TypeScript requirements. The Angular app is client-rendered; no SSR project is generated.

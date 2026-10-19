@@ -8,7 +8,8 @@ const nodeOptions = [process.env.NODE_OPTIONS, '--experimental-vm-modules'].filt
 const nxArgs = project ? ['test', project, ...args] : ['run-many', '-t', 'test', ...args];
 const result = spawnSync(process.execPath, [nxCli, ...nxArgs], {
   stdio: 'inherit',
-  env: { ...process.env, NODE_OPTIONS: nodeOptions },
+  // Keep ignored developer .env values out of tests unless explicitly exported in the shell.
+  env: { ...process.env, NODE_OPTIONS: nodeOptions, DOTENV_CONFIG_PATH: process.env.DOTENV_CONFIG_PATH || resolve(__dirname, 'test.env') },
 });
 
 if (result.error) throw result.error;

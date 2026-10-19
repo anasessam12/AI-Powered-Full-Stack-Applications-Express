@@ -6,7 +6,7 @@
 
 ## Local operations
 
-PostgreSQL is provided by Compose with a persistent named volume, and uploaded bytes use `DOCUMENT_STORAGE_ROOT` (default `var/documents`). Schema changes use TypeORM migrations; automatic schema synchronization is disabled. Local database creation and test database reset are designed as separate guarded workflows. Never point a test URL at shared/deployed data or remove the persistent volume as part of a routine stop.
+PostgreSQL is provided by the native local service during development, and uploaded bytes use `DOCUMENT_STORAGE_ROOT` (default `var/documents`). Schema changes use TypeORM migrations; automatic schema synchronization is disabled. Local database creation and test database reset are designed as separate guarded workflows. Never point a test URL at shared/deployed data.
 
 ## Observability and recovery
 

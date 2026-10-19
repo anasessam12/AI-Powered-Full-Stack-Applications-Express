@@ -2,7 +2,7 @@
 
 ## Configuration and runtime
 
-Run `npm run db:setup` for a first local install; it creates `.env` only if absent and never drops the database or Compose volume. Set `DATABASE_URL`, `WEB_ORIGIN`, `API_PORT`, `DOCUMENT_STORAGE_ROOT`, `DOCUMENT_MAX_BYTES`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and retrieval thresholds explicitly in a deployment environment. Keep provider credentials server-side and out of browser bundles, logs, screenshots, and source control. Template database password and fixed seed users are local/test-only values; do not carry them into deployment.
+Run `npm run db:setup` for a first local install after configuring `DATABASE_ADMIN_URL`; it creates `.env` only if absent and never drops the database. Set `DATABASE_URL`, `WEB_ORIGIN`, `API_PORT`, `DOCUMENT_STORAGE_ROOT`, `DOCUMENT_MAX_BYTES`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and retrieval thresholds explicitly in a deployment environment. Keep provider credentials server-side and out of browser bundles, logs, screenshots, and source control. Template database passwords and fixed seed users are local/test-only values; do not carry them into deployment.
 
 Run `npm run db:migrate` as a controlled release step before serving traffic. Start the API and Angular static build behind a TLS-terminating reverse proxy that forwards `/api` to NestJS and serves the SPA. Configure the exact allowed web origin, secure cookie behavior (`NODE_ENV=production`), request/body limits, health probes, and graceful shutdown. The current repository documents local and CI operation; it does not include a deployment-specific container, secret manager, HA database, or cloud storage integration.
 
@@ -12,7 +12,7 @@ Local development seeds `workspace.admin` and `workspace.agent`, plus a fictiona
 
 ## Documents and backups
 
-Original documents are stored under `DOCUMENT_STORAGE_ROOT` (default `var/documents`); PostgreSQL stores document metadata, chunks, accounts, sessions, conversations, messages, and citations. Back up PostgreSQL and the document directory together and preserve their recovery point relationship. PostgreSQL backups should be encrypted and access-controlled; validate restore procedures in an isolated environment before relying on them. The named local Compose volume is development convenience, not a backup strategy. Restoring the database without corresponding document bytes can leave citations inaccessible.
+Original documents are stored under `DOCUMENT_STORAGE_ROOT` (default `var/documents`); PostgreSQL stores document metadata, chunks, accounts, sessions, conversations, messages, and citations. Back up PostgreSQL and the document directory together and preserve their recovery point relationship. PostgreSQL backups should be encrypted and access-controlled; validate restore procedures in an isolated environment before relying on them. Restoring the database without corresponding document bytes can leave citations inaccessible.
 
 ## Monitoring and incident handling
 

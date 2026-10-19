@@ -55,12 +55,14 @@ describe('OpenRouterProvider', () => {
     delete process.env.OPENROUTER_API_KEY;
     await expect(collect(new OpenRouterProvider().stream({ system: 's', question: 'q', context: 'c' }))).rejects.toMatchObject({ code: 'CONFIGURATION' });
     process.env.OPENROUTER_API_KEY = 'test-key';
+    process.env.OPENROUTER_MODEL = 'openai/gpt-test';
     globalThis.fetch = jest.fn().mockResolvedValue(new Response('private provider detail', { status: 429 })) as unknown as typeof fetch;
     await expect(collect(new OpenRouterProvider().stream({ system: 's', question: 'q', context: 'c' }))).rejects.toMatchObject({ code: 'UPSTREAM' });
   });
 
   it('rejects malformed and oversized provider events without exposing their content', async () => {
     process.env.OPENROUTER_API_KEY = 'test-key';
+    process.env.OPENROUTER_MODEL = 'openai/gpt-test';
     process.env.OPENROUTER_MODEL = 'openai/gpt-test';
     globalThis.fetch = jest.fn()
       .mockResolvedValueOnce(new Response('data: not-json\n\n', { status: 200 }))
@@ -71,6 +73,7 @@ describe('OpenRouterProvider', () => {
 
   it('propagates cancellation and enforces the provider timeout', async () => {
     process.env.OPENROUTER_API_KEY = 'test-key';
+    process.env.OPENROUTER_MODEL = 'openai/gpt-test';
     const controller = new AbortController();
     const fetchMock = jest.fn((_url: string, options: { signal: AbortSignal }) => new Promise<Response>((_resolve, reject) => {
       options.signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true });

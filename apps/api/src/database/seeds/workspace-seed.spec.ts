@@ -50,10 +50,10 @@ function memoryDataSource(url: string) {
 
 describe('seedWorkspace target guards', () => {
   it('refuses production local seeding before touching repositories', async () => {
-    const source = unopenedDataSource('postgresql://support_app:secret@localhost:5433/teamWorkspace');
+    const source = unopenedDataSource('postgresql://support_app:secret@localhost:5432/teamWorkspace');
     await expect(seedWorkspace(source, 'local', {
       NODE_ENV: 'production',
-      DATABASE_URL: 'postgresql://support_app:secret@localhost:5433/teamWorkspace',
+      DATABASE_URL: 'postgresql://support_app:secret@localhost:5432/teamWorkspace',
     })).rejects.toThrow(/production/i);
     expect(source.getRepository).not.toHaveBeenCalled();
   });
@@ -68,9 +68,9 @@ describe('seedWorkspace target guards', () => {
   });
 
   it('refuses a test URL without the _test suffix before touching repositories', async () => {
-    const source = unopenedDataSource('postgresql://support_app:secret@localhost:5433/teamWorkspace');
+    const source = unopenedDataSource('postgresql://support_app:secret@localhost:5432/teamWorkspace');
     await expect(seedWorkspace(source, 'test', {
-      TEST_DATABASE_URL: 'postgresql://support_app:secret@localhost:5433/teamWorkspace',
+      TEST_DATABASE_URL: 'postgresql://support_app:secret@localhost:5432/teamWorkspace',
     })).rejects.toThrow(/_test/);
     expect(source.getRepository).not.toHaveBeenCalled();
   });
@@ -79,7 +79,7 @@ describe('seedWorkspace target guards', () => {
 describe('seedWorkspace idempotency', () => {
   it('creates both role accounts and searchable knowledge once without replacing an existing password', async () => {
     const root = await mkdtemp(join(tmpdir(), 'team-workspace-seed-'));
-    const databaseUrl = 'postgresql://support_app:secret@localhost:5433/teamWorkspace';
+    const databaseUrl = 'postgresql://support_app:secret@localhost:5432/teamWorkspace';
     const env = { NODE_ENV: 'development', DATABASE_URL: databaseUrl, DOCUMENT_STORAGE_ROOT: root };
     const memory = memoryDataSource(databaseUrl);
     try {

@@ -3,12 +3,12 @@
 ## Prerequisites
 
 - Node.js 24.21.0 (see `.nvmrc`) and npm 11.
-- Docker Compose v2 for the repository-managed PostgreSQL service.
+- A local PostgreSQL service (18 recommended), listening on `localhost:5432`.
 
 ## First run
 
 1. Install the locked dependencies: `npm ci`.
-2. Run `npm run db:setup`. It creates `.env` from `.env.example` only when missing, starts PostgreSQL, creates exact-case `teamWorkspace`, applies migrations, and adds local Admin/Agent accounts plus an indexed sample document.
+2. Set `DATABASE_ADMIN_URL` in ignored `.env` to an administrator login for your local PostgreSQL server. Run `npm run db:setup`. It creates `.env` from `.env.example` only when missing, creates the app role/database if missing, applies migrations, and adds local Admin/Agent accounts plus an indexed sample document. Existing app-role passwords are never changed.
 3. Run `npm start` and open `http://localhost:4200`. The health endpoint is `http://localhost:3000/api/v1/health` and returns 503 if PostgreSQL is unavailable.
 
 The local-only login accounts are `workspace.admin` / `Team-workspace-admin-2026!` (Admin) and `workspace.agent` / `Team-workspace-agent-2026!` (Agent). They are seeded only in local mode, are not production credentials, and an existing account's password is never overwritten by rerunning the seed. For a fresh production installation, use `npm run admin:create` after migrations.
@@ -20,10 +20,7 @@ The API supports username/password sessions, Admin user management, document ing
 - `npm start` / `npm run dev`: serve Angular; the Nx target starts the API dependency.
 - `npm run start:api`: serve only the NestJS API.
 - `npx nx serve api`: serve the API by itself.
-- `npm run db:up`: start the repository PostgreSQL container.
-- `npm run db:stop`: stop PostgreSQL while preserving its named volume.
-- `npm run db:status`: inspect the Compose service state.
-- `npm run db:setup`: safe first-run setup, migrations, and local fixtures; it never drops databases or volumes.
+- `npm run db:setup`: safe first-run setup, migrations, and local fixtures; it never drops databases.
 - `npm run db:create` / `npm run db:create:test`: create `teamWorkspace` or a guarded `_test` database if missing.
 - `npm run db:migrate`: apply pending TypeORM migrations.
 - `npm run db:revert`: revert the last migration; use only when its effects are understood.
@@ -34,7 +31,7 @@ The API supports username/password sessions, Admin user management, document ing
 - `docs/product/testing.md`: integration-test setup, deterministic provider tests, and retrieval evaluation conventions.
 - `npm run lint`: run Nx lint targets.
 - `npm run build`: run Nx builds.
-- PostgreSQL is reachable to desktop tools such as pgAdmin at host `localhost`, port `5433`, maintenance database `postgres`, user `support_app`, using the local password in ignored `.env`. Refresh the server's database tree to see `teamWorkspace` after setup.
-- Prefer `npm run db:stop` for routine shutdown; it preserves the named volume.
+- PostgreSQL is reachable to desktop tools such as pgAdmin at host `localhost`, port `5432`. Register the server with your PostgreSQL administrator credentials and maintenance database `postgres`; refresh its database tree to see `teamWorkspace` after setup. On Windows, manage the installed PostgreSQL service through Services or pgAdmin; the project scripts do not start or stop it.
+- `DATABASE_ADMIN_URL` is only for local database provisioning; `DATABASE_URL` uses the restricted `support_app` role. URL-encode reserved characters in passwords. Use the same app role/password in `DATABASE_URL` and `TEST_DATABASE_URL`.
 
 `OPENROUTER_API_KEY` is blank in the template. Add a real provider key only to local ignored `.env`; never commit it or copy it into browser settings, docs, prompts, or logs.

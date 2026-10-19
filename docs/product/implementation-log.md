@@ -108,3 +108,9 @@ Entries below preserve the results observed at each historical phase. The Expres
 ## Local database workflow follow-up — 2026-10-19
 
 Added loopback-only creation for the exact `teamWorkspace` name and `_test` databases, idempotent local/test Admin and Agent fixtures, indexed sample knowledge, and cross-platform `db:*` setup scripts. Unit tests, lint, build, Playwright discovery, and documentation link checks pass. Local PostgreSQL creation and database-backed E2E remain unverified because this environment has no Docker executable and nothing is listening on `localhost:5433`; no database has been created on this machine by this follow-up.
+
+## Native PostgreSQL follow-up — 2026-10-19
+
+Removed the local Compose configuration and `db:up`/`db:stop` commands. Local setup now uses the installed PostgreSQL service on `localhost:5432`, a separate `DATABASE_ADMIN_URL` for provisioning, and the restricted `support_app` role for migrations and runtime. Provisioning creates a missing role/database only; it never changes existing role passwords or drops a database. GitHub Actions retains its ephemeral PostgreSQL service for CI.
+
+The machine's PostgreSQL 18 Windows service is running on port 5432. The repository template credentials were rejected by that server (`28P01`), so database creation has not yet run. Configure the correct local administrator URL in the ignored `.env` file and rerun `npm run db:setup`; do not send the password in chat. pgAdmin should connect to `localhost:5432` with the machine's actual PostgreSQL credentials and maintenance database `postgres`.

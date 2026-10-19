@@ -35,15 +35,15 @@ describe('local database setup orchestration', () => {
       rootDir,
       runCommand(command, args) {
         commands.push(`${command} ${args.join(' ')}`);
-        return { status: commands.length === 2 ? 1 : 0 };
+        return { status: commands.length === 1 ? 1 : 0 };
       },
     })).rejects.toThrow(/db:create/);
-    expect(commands).toEqual(['docker compose up -d postgres', 'npm run db:create']);
+    expect(commands).toEqual(['npm run db:create']);
   });
 
   it.each([
-    [3, 'db:migrate'],
-    [4, 'db:seed:local'],
+    [2, 'db:migrate'],
+    [3, 'db:seed:local'],
   ])('stops at %s when %s fails', async (failedIndex, failedCommand) => {
     const commands: string[] = [];
     await expect(runLocalSetup({

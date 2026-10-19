@@ -1,16 +1,14 @@
 import 'dotenv/config';
 import { Client } from 'pg';
-import { createDatabaseIfMissing, resolveDatabaseTarget, type DatabaseMode } from '../database/database-target';
+import { createDatabaseIfMissing, createRoleIfMissing, resolveDatabaseAdminUrl, resolveDatabaseTarget, type DatabaseMode } from '../database/database-target';
 
 const RETRY_DELAY_MS = 1000;
 const RETRY_WINDOW_MS = 60_000;
 
 async function connectMaintenanceClient(connectionUrl: string): Promise<Client> {
-  const maintenanceUrl = new URL(connectionUrl);
-  maintenanceUrl.pathname = '/postgres';
   const deadline = Date.now() + RETRY_WINDOW_MS;
   while (Date.now() < deadline) {
-    const client = new Client({ connectionString: maintenanceUrl.toString(), connectionTimeoutMillis: 3000 });
+    const client = new Client({ connectionString: connectionUrl, connectionTimeoutMillis: 3000 });
     try {
       await client.connect();
       return client;
@@ -25,8 +23,20 @@ async function connectMaintenanceClient(connectionUrl: string): Promise<Client> 
 
 async function createDatabase(mode: DatabaseMode): Promise<void> {
   const target = resolveDatabaseTarget(mode, process.env);
-  const client = await connectMaintenanceClient(target.connectionUrl);
+  const adminUrl = resolveDatabaseAdminUrl(mode, process.env);
+  const appUrl = new URL(target.connectionUrl);
+  const client = await connectMaintenanceClient(adminUrl);
   try {
+    await createRoleIfMissing(
+      {
+        async query(text, values) {
+          const response = await client.query(text, values as string[] | undefined);
+          return { rows: response.rows as Array<Record<string, unknown>> };
+        },
+      },
+      decodeURIComponent(appUrl.username),
+      decodeURIComponent(appUrl.password),
+    );
     const result = await createDatabaseIfMissing(
       {
         async query(text, values) {
@@ -35,6 +45,7 @@ async function createDatabase(mode: DatabaseMode): Promise<void> {
         },
       },
       target.databaseName,
+      decodeURIComponent(appUrl.username),
     );
     console.log(`Database ${target.databaseName} ${result === 'created' ? 'created' : 'already exists'}.`);
   } finally {

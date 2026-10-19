@@ -9,7 +9,7 @@
 
 **Architecture:** Keep the existing Nx Angular/NestJS modular monolith and TypeORM migrations. Create the mixed-case PostgreSQL database through a quoted identifier from a local-only Node/Nest CLI; keep test data behind an explicit `_test` database guard. Seed fictional users, source files, indexed chunks, and credentials only in local/test modes. Preserve workshop/design history while removing the retired Express runtime and its runnable instructions.
 
-**Tech Stack:** Nx 23, Angular 22, NestJS 11, TypeORM 0.3, PostgreSQL 18.6, Node.js 24, `pg`, Jest, Playwright, Markdown/Mermaid, Docker Compose.
+**Tech Stack:** Nx 23, Angular 22, NestJS 11, TypeORM 0.3, PostgreSQL 18, Node.js 24, `pg`, Jest, Playwright, Markdown/Mermaid, native local PostgreSQL service.
 
 **Spec:** `docs/superpowers/specs/2026-10-19-product-cleanup-docs-local-db-design.md`
 
@@ -17,7 +17,7 @@
 
 - The local product database name is exactly `teamWorkspace`; preserve uppercase `W` by creating it with `CREATE DATABASE "teamWorkspace"`.
 - The disposable test database name ends in `_test`; default it to `teamWorkspace_test`.
-- Normal local setup accepts only a loopback host and never drops a database, truncates the development database, or removes the Compose volume.
+- Normal local setup accepts only a loopback host and never drops a database or truncates the development database.
 - Test seed/reset accepts only an explicit `_test` database.
 - Fixed usernames/passwords are development/test-only. Reject local seeding under `NODE_ENV=production`; hash passwords with the existing Argon2id service.
 - TypeORM migrations own schema changes; never enable schema synchronization. Keep production's interactive `admin:create` command unchanged.
@@ -129,13 +129,13 @@
 - Create: `scripts/database/setup-local.cjs`
 - Modify: `package.json`, `package-lock.json`, `.env.example`, `.github/workflows/ci.yml`, `README.md`, `docs/product/development.md`, `docs/product/testing.md`, `docs/product/operations.md`, `docs/product/implementation-log.md`
 
-**Interfaces:** Add `db:up`, `db:stop`, `db:status`, `db:create`, `db:create:test`, `db:migrate`, `db:seed:local`, `db:seed:test`, `db:setup`, `dev`, `start:api`, and `test:e2e` scripts. `db:setup` runs non-destructive local Compose startup → exact-case DB creation → migrations → local seed. The setup script copies `.env.example` only when `.env` is absent and uses Node child-process invocation so it works in PowerShell and CI shells.
+**Interfaces:** Add `db:create`, `db:create:test`, `db:migrate`, `db:seed:local`, `db:seed:test`, `db:setup`, `dev`, `start:api`, and `test:e2e` scripts. `db:setup` runs non-destructive exact-case database creation → migrations → local seed against native local PostgreSQL. The setup script copies `.env.example` only when `.env` is absent and uses Node child-process invocation so it works in PowerShell and CI shells.
 
 - [x] **Step 1: Write orchestration-script tests.** Added no-overwrite, copy-if-missing, and stop-on-create/migration/seed-failure tests with an injected runner.
 - [x] **Step 2: Run those tests and verify failure.** The first run failed because the setup module was missing.
-- [x] **Step 3: Implement cross-platform local setup orchestration.** Copies `.env.example` only when absent; runs Compose, create, migrate, and seed sequentially and exits on the first failure.
+- [x] **Step 3: Implement cross-platform local setup orchestration.** Copies `.env.example` only when absent; runs create, migrate, and seed sequentially and exits on the first failure. Follow-up update replaces Compose startup with native PostgreSQL and separate admin/app connection URLs.
 - [x] **Step 4: Add package scripts and environment values.** Added lifecycle/create/migrate/seed/setup/API scripts and exact local/test URLs. No dependencies changed, so lockfile was not modified.
-- [x] **Step 5: Update top-level and operational instructions.** README/development/testing/operations describe setup, fixed local/test users, pgAdmin host/port, persistent volume, and database protections.
+- [x] **Step 5: Update top-level and operational instructions.** README/development/testing/operations describe setup, fixed local/test users, pgAdmin host/port, native PostgreSQL, and database protections.
 - [x] **Step 6: Align CI to the guarded test database.** CI now uses maintenance DB `postgres`, creates `teamWorkspace_test` before migrations, and keeps deterministic provider/Chromium flow.
 - [x] **Step 7: Verify package and docs.** API tests, lint, build, Playwright `--list`, JSON parsing, documentation links, and `git diff --check` pass. `db:status` remains unavailable because Docker is not installed in this environment.
 - [x] **Step 8: Commit.** `docs: add local database and product run workflows`.
@@ -144,15 +144,15 @@
 
 **Files:**
 - Modify: `docs/product/implementation-log.md` only with verified results or a precise environment limitation
-- Local-only ignored file: `.env` copied from template if missing; local named Compose volume/database are not committed
+- Local-only ignored file: `.env` copied from template if missing; native PostgreSQL data is not committed
 
-**Interfaces:** Use only `npm run db:setup` for local creation; database catalog name must equal `teamWorkspace`. Do not reset or remove any existing database or volume.
+**Interfaces:** Use only `npm run db:setup` for local creation; database catalog name must equal `teamWorkspace`. Do not reset or remove any existing database.
 
-- [ ] **Step 1: Create local configuration without overwriting.** If `.env` is absent, run the setup command's copy behavior; verify `.env` remains git-ignored and never print its contents.
-- [ ] **Step 2: Create and seed PostgreSQL.** Run `npm run db:setup`; verify Compose health, exact catalog name, migrations applied, two roles seeded, indexed fixture available, and database URL case preserved.
-- [ ] **Step 3: Verify app workflows and quality gates.** Run `npm start`, authenticate as seeded local Admin and Agent, confirm Admin access controls, check the seeded document is indexed and can ground a citation, then run `npm test`, `npm run test:e2e` with `TEST_DATABASE_URL`, `npm run lint`, and `npm run build`.
-- [ ] **Step 4: Review cleanup and secret boundary.** Run `git diff --check`, `git status --short`, `git grep -n` for removed runtime paths and secrets; verify no local `.env`, `var/`, `data/`, or database files are staged.
-- [ ] **Step 5: Record results and commit.** Update implementation log with commands and observed outcomes, then commit `docs: record local database and full-stack verification`. If Docker is unavailable, record the exact unavailable check and leave database-creation acceptance explicitly pending rather than claiming completion.
+- [x] **Step 1: Create local configuration without overwriting.** `.env` was copied from the template by the earlier setup attempt; it remains ignored and was updated to native port 5432 without printing its contents. The local administrator password still requires the machine owner's value.
+- [ ] **Step 2: Create and seed PostgreSQL.** Pending: the installed PostgreSQL 18 service listens on localhost:5432, but template credentials were rejected (`28P01`). Configure the valid local `DATABASE_ADMIN_URL`, rerun `npm run db:setup`, then verify database, migrations, seeded roles, and indexed fixture.
+- [ ] **Step 3: Verify app workflows and quality gates.** Unit/API tests, lint, build, and Playwright discovery pass. Database integration, app login/citation acceptance, and live E2E remain pending the administrator credential and database setup.
+- [x] **Step 4: Review cleanup and secret boundary.** `git diff --check` and active-runtime scans completed; `.env` remains ignored and no local data or credentials are staged.
+- [x] **Step 5: Record results and commit.** Implementation log records native PostgreSQL and the exact credential limitation. Follow-up changes are committed separately; database-creation acceptance remains pending rather than reported complete.
 
 ## Coverage Self-Review
 
