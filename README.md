@@ -8,11 +8,10 @@ Requirements: Node.js 24.21.0, npm 11, and a locally installed PostgreSQL servic
 
 ```powershell
 npm ci
-npm run db:setup
-npm start
+npm run start:local
 ```
 
-Before setup, create `.env` from `.env.example` (or let setup copy it) and set `DATABASE_ADMIN_URL` to your local PostgreSQL administrator credentials. The app uses PostgreSQL on `localhost:5432` by default. `npm run db:setup` creates the exact-case `teamWorkspace` database if missing, applies migrations, and seeds the local Admin/Agent and example knowledge. It never drops a database. Open `http://localhost:4200` after setup. Local-only accounts: `workspace.admin` / `Team-workspace-admin-2026!` and `workspace.agent` / `Team-workspace-agent-2026!`. Change or remove these before exposing the machine or database to anyone else. Add an OpenRouter key and model to ignored `.env` to enable live answers. Tests use a deterministic provider and do not need provider credentials.
+`npm run start:local` runs the safe database setup (create if missing, migrate, seed) and then starts the Angular app with its NestJS API dependency. It never drops a database. Ensure the local PostgreSQL service is running and `DATABASE_ADMIN_URL` in ignored `.env` has valid administrator credentials. Open `http://localhost:4200`. Local-only accounts: `workspace.admin` / `Team-workspace-admin-2026!` and `workspace.agent` / `Team-workspace-agent-2026!`. Change or remove these before exposing the machine or database to anyone else. Add an OpenRouter key and model to ignored `.env` to enable live answers. Tests use a deterministic provider and do not need provider credentials.
 
 ## Quality checks
 

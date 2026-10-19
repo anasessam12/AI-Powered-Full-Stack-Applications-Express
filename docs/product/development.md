@@ -8,8 +8,8 @@
 ## First run
 
 1. Install the locked dependencies: `npm ci`.
-2. Set `DATABASE_ADMIN_URL` in ignored `.env` to an administrator login for your local PostgreSQL server. Run `npm run db:setup`. It creates `.env` from `.env.example` only when missing, creates the app role/database if missing, applies migrations, and adds local Admin/Agent accounts plus an indexed sample document. Existing app-role passwords are never changed.
-3. Run `npm start` and open `http://localhost:4200`. The health endpoint is `http://localhost:3000/api/v1/health` and returns 503 if PostgreSQL is unavailable.
+2. Make sure the local PostgreSQL service is running and `DATABASE_ADMIN_URL` in ignored `.env` has a valid administrator login.
+3. Run `npm run start:local`. It runs `npm run db:setup` first: `.env` is copied from `.env.example` only when missing, the app role/database are created if missing, migrations are applied, and local Admin/Agent accounts plus the indexed sample document are added. Then it serves Angular and its NestJS API dependency. Setup never drops the database or changes an existing app-role password. Open `http://localhost:4200`. The health endpoint is `http://localhost:3000/api/v1/health` and returns 503 if PostgreSQL is unavailable.
 
 The local-only login accounts are `workspace.admin` / `Team-workspace-admin-2026!` (Admin) and `workspace.agent` / `Team-workspace-agent-2026!` (Agent). They are seeded only in local mode, are not production credentials, and an existing account's password is never overwritten by rerunning the seed. For a fresh production installation, use `npm run admin:create` after migrations.
 
@@ -18,6 +18,7 @@ The API supports username/password sessions, Admin user management, document ing
 ## Common commands
 
 - `npm start` / `npm run dev`: serve Angular; the Nx target starts the API dependency.
+- `npm run start:local`: safely set up the local database, then start the full product.
 - `npm run start:api`: serve only the NestJS API.
 - `npx nx serve api`: serve the API by itself.
 - `npm run db:setup`: safe first-run setup, migrations, and local fixtures; it never drops databases.
