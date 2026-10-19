@@ -62,13 +62,13 @@
 
 **Interfaces:** Export `DatabaseCreationClient` with `query(text: string, values?: unknown[]): Promise<{ rows: Array<Record<string, unknown>> }>`; `resolveDatabaseTarget(mode: 'local' | 'test', env: NodeJS.ProcessEnv): { connectionUrl: string; databaseName: 'teamWorkspace' | `${string}_test` }`; and `createDatabaseIfMissing(client: DatabaseCreationClient, databaseName: 'teamWorkspace' | `${string}_test`): Promise<'created' | 'existing'>`. Test-mode names must match `^[A-Za-z0-9_]+_test$`. CLI mode `local` reads `DATABASE_URL`; mode `test` reads `TEST_DATABASE_URL`. Both connect to the maintenance database `postgres` and create only a validated, quoted identifier if absent.
 
-- [ ] **Step 1: Write failing database-target tests.** Add `local_database_preserves_mixed_case_name`, `local_database_rejects_remote_host`, `test_database_requires_test_suffix`, `test_database_rejects_remote_host`, `create_database_uses_quoted_exact_case`, and `create_database_skips_existing_name`; assert accepted URL target names are exactly `teamWorkspace` and `teamWorkspace_test` and fake-client SQL uses the correct quoted constant.
-- [ ] **Step 2: Run API tests and verify failure.** Run `npm run test:api`; expected: the new database target tests fail because the resolver is missing while existing suites continue to run.
-- [ ] **Step 3: Implement `resolveDatabaseTarget(mode, env)` in `database-target.ts`.** Parse the correct URL, require loopback host (`localhost`, `127.0.0.1`, or `::1`), require exact local database name or `_test` suffix, and reject production local mode before any connection.
-- [ ] **Step 4: Implement the create-if-absent CLI.** Connect with `pg` to `postgres` (retry connection for up to 60 seconds while local Compose becomes healthy), parameterize the catalog lookup, quote only validated identifiers in `CREATE DATABASE`, skip creation if the exact catalog name exists, and close the connection on success or failure.
-- [ ] **Step 5: Update Compose and environment defaults.** Set the container's maintenance DB to `postgres`, keep volume `postgres_data`, default `DATABASE_URL` to host port 5433 and `/teamWorkspace`, add `TEST_DATABASE_URL` for `/teamWorkspace_test`, and preserve all local credentials as development-only placeholders.
-- [ ] **Step 6: Verify guards and command behavior.** Run focused API tests and `git diff --check`; expected: all target-validation tests pass and repeated create reports already-existing databases without dropping or rewriting them. When Docker is available, verify `SELECT datname FROM pg_database WHERE datname IN ('teamWorkspace','teamworkspace')` returns only exact `teamWorkspace`.
-- [ ] **Step 7: Commit.** `feat: create guarded local PostgreSQL databases`.
+- [x] **Step 1: Write failing database-target tests.** Added target, remote-host, protocol, suffix, production, exact-quoted-create, and existing-database-skip tests.
+- [x] **Step 2: Run API tests and verify failure.** The new suite failed first because the resolver was missing; an added protocol guard test also failed because HTTP URLs were accepted.
+- [x] **Step 3: Implement `resolveDatabaseTarget(mode, env)` in `database-target.ts`.** Requires a PostgreSQL URL, loopback host, a database name, exact `teamWorkspace` local target, `_test` test target, and non-production local mode.
+- [x] **Step 4: Implement the create-if-absent CLI.** Connects to maintenance database `postgres` with bounded retries, parameterizes lookup, creates a quoted validated identifier only when absent, and closes the connection.
+- [x] **Step 5: Update Compose and environment defaults.** Compose maintenance DB is `postgres`; `.env.example` targets `teamWorkspace` and `teamWorkspace_test` on port 5433 with development-only credentials.
+- [x] **Step 6: Verify guards and command behavior.** `npm run test:api -- --runInBand`, `npm run build`, and `git diff --check` passed. Docker/catalog verification remains for Task 7.
+- [x] **Step 7: Commit.** `feat: create guarded local PostgreSQL databases`.
 
 ### Task 3: Add repeatable local and test seed fixtures
 
